@@ -1,26 +1,259 @@
 @import "tailwindcss";
 
+/* ── House Scout Design Tokens ──────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --bg:      #fbf8f3;
+  --bg-elev: #ffffff;
+  --bg-sunk: #f4efe7;
+
+  /* Ink */
+  --ink:   #1f1b17;
+  --ink-2: #4a413a;
+  --ink-3: #847a6f;
+  --ink-4: #b8ad9f;
+
+  /* Lines */
+  --line:        rgba(31, 27, 23, 0.08);
+  --line-strong: rgba(31, 27, 23, 0.16);
+
+  /* Accent – terracotta (default) */
+  --accent:      #d97757;
+  --accent-deep: #b95d3f;
+  --accent-soft: #fbeee5;
+
+  /* Room tones */
+  --sage:      #6b8f7a;
+  --sage-soft: #e4ece6;
+  --gold:      #c4893a;
+  --gold-soft: #f5ead5;
+  --sky:       #6b8aa8;
+  --sky-soft:  #e2ebf1;
+
+  /* Shadows */
+  --shadow-card:  0 0 0 1px rgba(31, 27, 23, 0.04),
+                  0 2px 6px rgba(31, 27, 23, 0.04),
+                  0 4px 10px rgba(31, 27, 23, 0.06);
+  --shadow-hover: 0 0 0 1px rgba(31, 27, 23, 0.05),
+                  0 6px 16px rgba(31, 27, 23, 0.08),
+                  0 12px 24px rgba(31, 27, 23, 0.06);
+  --shadow-lift:  0 10px 30px rgba(31, 27, 23, 0.10),
+                  0 2px 6px rgba(31, 27, 23, 0.06);
+
+  /* Radius */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  20px;
+  --r-xl:  28px;
+  --r-2xl: 36px;
+
+  /* shadcn/ui compat – maps shadcn vars to House Scout tokens */
+  --background:         var(--bg);
+  --foreground:         var(--ink);
+  --card:               var(--bg-elev);
+  --card-foreground:    var(--ink);
+  --popover:            var(--bg-elev);
+  --popover-foreground: var(--ink);
+  --primary:            var(--ink);
+  --primary-foreground: var(--bg);
+  --secondary:          var(--bg-sunk);
+  --secondary-foreground: var(--ink-2);
+  --muted:              var(--bg-sunk);
+  --muted-foreground:   var(--ink-3);
+  /* shadcn "accent" = hover/subtle surface, not our terracotta CTA */
+  --shadcn-accent:            var(--bg-sunk);
+  --shadcn-accent-foreground: var(--ink);
+  --destructive:        #dc2626;
+  --border:             var(--line);
+  --input:              var(--line-strong);
+  --ring:               var(--accent);
+  --radius:             var(--r-md);
 }
+
+/* ── Dark Mode – "Evening Scout" ────────────────────────────────────── */
+
+[data-theme="dark"] {
+  --bg:      #1a1613;
+  --bg-elev: #262020;
+  --bg-sunk: #15110f;
+  --ink:     #f4efe7;
+  --ink-2:   #c9beb1;
+  --ink-3:   #8a8075;
+  --ink-4:   #5c544b;
+  --line:        rgba(0, 0, 0, 0.32);
+  --line-strong: rgba(0, 0, 0, 0.64);
+  --shadow-card:  0 0 0 1px rgba(0, 0, 0, 0.16),
+                  0 2px 6px rgba(0, 0, 0, 0.16),
+                  0 4px 10px rgba(0, 0, 0, 0.24);
+  --shadow-hover: 0 0 0 1px rgba(0, 0, 0, 0.20),
+                  0 6px 16px rgba(0, 0, 0, 0.32),
+                  0 12px 24px rgba(0, 0, 0, 0.24);
+  --shadow-lift:  0 10px 30px rgba(0, 0, 0, 0.40),
+                  0 2px 6px rgba(0, 0, 0, 0.24);
+}
+
+/* ── Accent Variants ────────────────────────────────────────────────── */
+
+[data-accent="sage"] {
+  --accent:      #6b8f7a;
+  --accent-deep: #4e6e5d;
+  --accent-soft: #e4ece6;
+}
+
+[data-accent="sky"] {
+  --accent:      #6b8aa8;
+  --accent-deep: #4a6a88;
+  --accent-soft: #e2ebf1;
+}
+
+[data-accent="gold"] {
+  --accent:      #c4893a;
+  --accent-deep: #9c6b26;
+  --accent-soft: #f5ead5;
+}
+
+/* ── Tailwind Token Map ──────────────────────────────────────────────
+   @theme inline: utilities read CSS vars at render time → theme-aware.
+   Generated classes: bg-bg, bg-bg-elev, bg-bg-sunk, text-ink, text-ink-2,
+   bg-accent, text-accent, border-accent, shadow-card, rounded-sm … etc.
+────────────────────────────────────────────────────────────────────── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Surfaces */
+  --color-bg:        var(--bg);
+  --color-bg-elev:   var(--bg-elev);
+  --color-bg-sunk:   var(--bg-sunk);
+
+  /* Ink */
+  --color-ink:   var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+
+  /* Lines */
+  --color-line:        var(--line);
+  --color-line-strong: var(--line-strong);
+
+  /* Accent – terracotta primary CTA */
+  --color-accent:      var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-soft: var(--accent-soft);
+
+  /* Room tones (photo placeholders only) */
+  --color-sage:      var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-gold:      var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-sky:       var(--sky);
+  --color-sky-soft:  var(--sky-soft);
+
+  /* Shadows */
+  --shadow-card:  var(--shadow-card);
+  --shadow-hover: var(--shadow-hover);
+  --shadow-lift:  var(--shadow-lift);
+
+  /* Radius – overrides Tailwind defaults */
+  --radius-sm:  var(--r-sm);
+  --radius-md:  var(--r-md);
+  --radius-lg:  var(--r-lg);
+  --radius-xl:  var(--r-xl);
+  --radius-2xl: var(--r-2xl);
+
+  /* Fonts */
+  --font-serif: var(--font-fraunces);
+  --font-sans:  var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Base ───────────────────────────────────────────────────────────── */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Component Classes ──────────────────────────────────────────────── */
+
+.scrollable::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollable::-webkit-scrollbar-thumb { background: var(--ink-4); border-radius: 4px; }
+.scrollable::-webkit-scrollbar-track { background: transparent; }
+
+.hs-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--bg-sunk); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 500; color: var(--ink-2); white-space: nowrap;
+}
+
+.hs-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--r-md);
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+  border: 1px solid transparent; cursor: pointer;
+  transition: transform 120ms ease, box-shadow 160ms ease, background 160ms ease;
+  letter-spacing: -0.01em;
+}
+.hs-btn:active { transform: scale(0.98); }
+.hs-btn--primary { background: var(--ink); color: var(--bg); }
+.hs-btn--accent  { background: var(--accent); color: #fff; }
+.hs-btn--ghost   { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.hs-btn--ghost:hover { background: var(--bg-sunk); }
+
+.hs-card {
+  background: var(--bg-elev); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.hs-h-serif {
+  font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "SOFT" 50; line-height: 1.05;
+}
+
+.hs-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+
+.hs-photo {
+  position: relative; overflow: hidden; color: rgba(31, 27, 23, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #e6d9c6, #d9c7ad);
+}
+.hs-photo::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.25) 0 14px, rgba(255,255,255,0) 14px 28px);
+}
+.hs-photo--sage  { background: linear-gradient(135deg, #cfdcd0, #b8c9bc); }
+.hs-photo--terra { background: linear-gradient(135deg, #ead5c6, #dcb89f); }
+.hs-photo--sky   { background: linear-gradient(135deg, #cdd7e0, #b1bfcb); }
+.hs-photo--gold  { background: linear-gradient(135deg, #ecdcb9, #dcc38a); }
+[data-theme="dark"] .hs-photo       { color: rgba(244,239,231,0.55); background: linear-gradient(135deg, #4a3f32, #3a2f24); }
+[data-theme="dark"] .hs-photo--sage  { background: linear-gradient(135deg, #3a4e42, #2e4036); }
+[data-theme="dark"] .hs-photo--terra { background: linear-gradient(135deg, #5a3f30, #4a3324); }
+[data-theme="dark"] .hs-photo--sky   { background: linear-gradient(135deg, #324250, #243240); }
+[data-theme="dark"] .hs-photo--gold  { background: linear-gradient(135deg, #5a4224, #483316); }
+
+.hs-focusable:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@keyframes hs-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hs-anim-in { animation: hs-fade-up 360ms cubic-bezier(.2,.8,.2,1) both; }
+
+@keyframes hs-pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.hs-anim-pop { animation: hs-pop 420ms cubic-bezier(.2,.8,.2,1) both; }
+
+@keyframes hs-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.hs-anim-slide-up { animation: hs-slide-up 320ms cubic-bezier(.2,.8,.2,1) both; }
