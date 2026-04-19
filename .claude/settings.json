@@ -1,0 +1,24 @@
+{
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "caveman@claude-plugins-official": true,
+    "figma@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(pnpm *)",
+      "Bash(npx *)",
+      "Bash(bunx *)",
+      "Bash(vercel *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(tsc --noEmit)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm build)",
+      "Bash(pnpm dev)"
+    ]
+  }
+}

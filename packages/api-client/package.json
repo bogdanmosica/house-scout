@@ -1,0 +1,17 @@
+{
+  "name": "@house-scout/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@house-scout/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "*"
+  }
+}
