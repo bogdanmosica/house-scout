@@ -20,6 +20,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@house-scout/stores':
+        specifier: workspace:*
+        version: link:../../packages/stores
       '@house-scout/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -32,6 +35,9 @@ importers:
       react-dom:
         specifier: 19.2.4
         version: 19.2.4(react@19.2.4)
+      zustand:
+        specifier: ^5.0.0
+        version: 5.0.12(@types/react@19.2.14)(react@19.2.4)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
