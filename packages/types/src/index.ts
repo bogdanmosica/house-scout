@@ -47,6 +47,13 @@ export interface InspectionCategoryDef {
   icon: string
 }
 
+export interface CategoryDef {
+  id: string
+  name: string
+  desc: string
+  icon: string
+}
+
 export interface ChipOption {
   label: string
   w: number
@@ -90,7 +97,7 @@ export interface Question {
 export type AnswerRaw = number | boolean | null
 
 export interface RoomScore {
-  room: Room
+  room: Room | InspectionCategory
   score: number | null
   answered: number
   total: number
@@ -100,7 +107,7 @@ export interface ScoutSession {
   propertyId: string
   bank: QuestionBank
   mode: PropertyMode
-  inspectionDepth: ScoutDepth
+  inspectionDepth?: ScoutDepth
   answers: Record<string, AnswerRaw>
   currentRoom: string
   startedAt: string
