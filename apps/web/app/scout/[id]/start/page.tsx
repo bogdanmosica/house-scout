@@ -1,0 +1,80 @@
+'use client'
+import { useParams, useRouter } from 'next/navigation'
+import { usePropertyStore, useScoutStore } from '@house-scout/stores'
+import type { ScoutDepth } from '@house-scout/types'
+
+export default function ScoutStartPage() {
+  const params = useParams()
+  const router = useRouter()
+  const id = typeof params.id === 'string' ? params.id : ''
+
+  const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
+  const { startSession } = useScoutStore()
+
+  if (!property) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-3)' }}>
+        Property not found.
+      </div>
+    )
+  }
+
+  const handleSelect = (depth: ScoutDepth) => {
+    startSession(property.id, property.mode, 'full', depth)
+    router.push(`/scout/${id}`)
+  }
+
+  return (
+    <div style={{
+      minHeight: '100svh', background: 'var(--bg)',
+      display: 'flex', flexDirection: 'column',
+      padding: '48px 20px 32px',
+    }}>
+      <div className="hs-label" style={{ marginBottom: 6 }}>Start scouting</div>
+      <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '0 0 4px' }}>
+        {property.name}
+      </h1>
+      <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 40 }}>
+        {property.address} · {property.city}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <button
+          onClick={() => handleSelect('quick')}
+          className="hs-card hs-focusable"
+          style={{
+            padding: 20, textAlign: 'left', cursor: 'pointer',
+            border: '1px solid var(--line)', background: 'var(--bg-elev)',
+            borderRadius: 'var(--r-lg)', width: '100%',
+          }}
+        >
+          <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
+            Quick Scout
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5 }}>
+            7 rooms · lifestyle questions · ideal for a first visit
+          </div>
+        </button>
+
+        {property.type === 'house' && (
+          <button
+            onClick={() => handleSelect('inspection')}
+            className="hs-card hs-focusable"
+            style={{
+              padding: 20, textAlign: 'left', cursor: 'pointer',
+              border: '1px solid var(--accent)', background: 'var(--bg-elev)',
+              borderRadius: 'var(--r-lg)', width: '100%',
+            }}
+          >
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: 'var(--accent)' }}>
+              Deep Inspection
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5 }}>
+              7 technical categories · structural & systems check · for serious buyers
+            </div>
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
