@@ -1,25 +1,32 @@
-import { ROOMS } from '../../lib/data'
 import { computeRoomScore } from '../../lib/scoring'
-import type { Question, Room, AnswerRaw } from '@house-scout/types'
+import type { Question, AnswerRaw } from '@house-scout/types'
 import { StarRow } from '../ui/star'
 import { Icon } from '../ui/icon'
 import type { IconName } from '../ui/icon'
+
+interface CategoryDef {
+  id: string
+  name: string
+  desc: string
+  icon: string
+}
 
 interface ScoutResultsProps {
   propertyName: string
   overall: number
   answered: number
   total: number
-  questionsByRoom: Record<Room, Question[]>
+  categoryDefs: CategoryDef[]
+  questionsByRoom: Record<string, Question[]>
   answers: Record<string, AnswerRaw>
   onSave: () => void
 }
 
 export function ScoutResults({
   propertyName, overall, answered, total,
-  questionsByRoom, answers, onSave,
+  categoryDefs, questionsByRoom, answers, onSave,
 }: ScoutResultsProps) {
-  const roomScores = ROOMS
+  const roomScores = categoryDefs
     .map((r) => ({ ...r, score: computeRoomScore(r.id, questionsByRoom, answers) }))
     .filter((r): r is typeof r & { score: number } => r.score !== null)
 

@@ -1,12 +1,20 @@
-import type { RoomDef, Room, Question, AnswerRaw } from '@house-scout/types'
+'use client'
+import type { Question, AnswerRaw } from '@house-scout/types'
 import { Icon } from '../ui/icon'
 import type { IconName } from '../ui/icon'
 import { computeRoomScore } from '../../lib/scoring'
 
+interface CategoryDef {
+  id: string
+  name: string
+  desc: string
+  icon: string
+}
+
 interface RoomChipsProps {
-  rooms: RoomDef[]
+  rooms: CategoryDef[]
   currentIdx: number
-  questionsByRoom: Record<Room, Question[]>
+  questionsByRoom: Record<string, Question[]>
   answers: Record<string, AnswerRaw>
   onSelect: (idx: number) => void
 }
