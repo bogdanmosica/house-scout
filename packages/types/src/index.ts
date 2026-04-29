@@ -1,6 +1,8 @@
+export type PropertyType = 'apartment' | 'house' | 'condo' | 'loft'
 export type PropertyMode = 'rent' | 'buy'
 export type PropertyTone = 'terra' | 'sage' | 'sky' | 'gold'
 export type PropertyStatus = 'scouted' | 'todo'
+export type ScoutDepth = 'quick' | 'inspection'
 
 export type Room =
   | 'entrance'
@@ -15,11 +17,31 @@ export const ROOM_ORDER: Room[] = [
   'entrance', 'living', 'kitchen', 'bedroom', 'bath', 'outdoor', 'neighbor',
 ]
 
-export type QuestionKind = 'stars' | 'scale' | 'chips' | 'yesno'
+export type InspectionCategory =
+  | 'utilities'
+  | 'foundation'
+  | 'structure'
+  | 'windows'
+  | 'thermal'
+  | 'electrical'
+  | 'roof'
+
+export const INSPECTION_CATEGORY_ORDER: InspectionCategory[] = [
+  'utilities', 'foundation', 'structure', 'windows', 'thermal', 'electrical', 'roof',
+]
+
+export type QuestionKind = 'stars' | 'scale' | 'chips' | 'yesno' | 'radio'
 export type QuestionBank = 'full' | 'light'
 
 export interface RoomDef {
   id: Room
+  name: string
+  desc: string
+  icon: string
+}
+
+export interface InspectionCategoryDef {
+  id: InspectionCategory
   name: string
   desc: string
   icon: string
@@ -35,7 +57,7 @@ export interface Property {
   name: string
   address: string
   city: string
-  type: string
+  type: PropertyType
   mode: PropertyMode
   price: string
   beds: number
@@ -52,7 +74,7 @@ export interface Property {
 
 export interface Question {
   id: string
-  room: Room
+  room: Room | InspectionCategory
   kind: QuestionKind
   text: string
   sub?: string
@@ -78,7 +100,8 @@ export interface ScoutSession {
   propertyId: string
   bank: QuestionBank
   mode: PropertyMode
+  inspectionDepth: ScoutDepth
   answers: Record<string, AnswerRaw>
-  currentRoom: Room
+  currentRoom: string
   startedAt: string
 }
