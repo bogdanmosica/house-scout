@@ -1,4 +1,4 @@
-import type { Question, Room, AnswerRaw } from '@house-scout/types'
+import type { Question, AnswerRaw } from '@house-scout/types'
 
 export function scoreAnswer(q: Question, raw: AnswerRaw): number | null {
   if (raw == null) return null
@@ -11,12 +11,18 @@ export function scoreAnswer(q: Question, raw: AnswerRaw): number | null {
   if (q.kind === 'yesno') {
     return raw === true ? 5 : raw === false ? 1 : null
   }
+  if (q.kind === 'radio') {
+    const w = typeof raw === 'number' ? (q.options?.[raw]?.w ?? null) : null
+    if (w === null) return null
+    // Normalize 0–10 weight to 1–5 scale: 0→1, 5→3, 10→5
+    return (w / 10) * 4 + 1
+  }
   return null
 }
 
 export function computeRoomScore(
-  room: Room,
-  questionsByRoom: Record<Room, Question[]>,
+  room: string,
+  questionsByRoom: Record<string, Question[]>,
   answers: Record<string, AnswerRaw>
 ): number | null {
   const qs = questionsByRoom[room] ?? []
@@ -28,12 +34,12 @@ export function computeRoomScore(
 }
 
 export function computeRating(
-  questionsByRoom: Record<Room, Question[]>,
+  questionsByRoom: Record<string, Question[]>,
   answers: Record<string, AnswerRaw>
 ): { overall: number; answered: number; total: number } {
   const scores: number[] = []
   let total = 0
-  for (const [room, qs] of Object.entries(questionsByRoom) as [Room, Question[]][]) {
+  for (const [room, qs] of Object.entries(questionsByRoom)) {
     total += qs.length
     for (const q of qs) {
       const s = scoreAnswer(q, answers[`${room}.${q.id}`] ?? null)
