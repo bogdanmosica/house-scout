@@ -98,6 +98,36 @@ export function AnswerInput({ q, value, onChange }: AnswerInputProps) {
     )
   }
 
+  if (q.kind === 'radio') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {(q.options ?? []).map((o, i) => (
+          <button
+            key={i}
+            onClick={() => onChange(i)}
+            className="hs-focusable"
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              border: `1px solid ${value === i ? 'var(--ink)' : 'var(--line-strong)'}`,
+              background: value === i ? 'var(--ink)' : 'var(--bg-elev)',
+              color: value === i ? 'var(--bg)' : 'var(--ink-2)',
+              borderRadius: 10,
+              fontSize: 13,
+              fontWeight: value === i ? 600 : 400,
+              fontFamily: 'inherit',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'all 140ms ease',
+            }}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
   return null
 }
 
