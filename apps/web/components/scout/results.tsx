@@ -6,6 +6,7 @@ import type { Question, AnswerRaw } from '@house-scout/types'
 import { StarRow } from '../ui/star'
 import { Icon } from '../ui/icon'
 import type { IconName } from '../ui/icon'
+import { useTranslation } from '../../lib/i18n'
 
 interface CategoryDef {
   id: string
@@ -25,13 +26,6 @@ interface ScoutResultsProps {
   onSave: () => void
 }
 
-function getVerdictLabel(score: number): string {
-  if (score >= 4.5) return 'Excellent pick'
-  if (score >= 3.5) return 'Strong contender'
-  if (score >= 2.5) return 'Worth considering'
-  return 'Needs more thought'
-}
-
 function getBarColor(score: number): string {
   if (score >= 4) return 'var(--accent)'
   if (score >= 3) return 'var(--ink-2)'
@@ -45,6 +39,7 @@ export function ScoutResults({
   const [shareCopied, setShareCopied] = useState(false)
   const [mounted, setMounted] = useState(false)
   const shareCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true))
@@ -58,6 +53,13 @@ export function ScoutResults({
   const roomScores = categoryDefs
     .map((r) => ({ ...r, score: computeRoomScore(r.id, questionsByRoom, answers) }))
     .filter((r): r is typeof r & { score: number } => r.score !== null)
+
+  function getVerdictLabel(score: number): string {
+    if (score >= 4.5) return t('results.v.excellent')
+    if (score >= 3.5) return t('results.v.strong')
+    if (score >= 2.5) return t('results.v.worth')
+    return t('results.v.needs')
+  }
 
   const verdictLabel = getVerdictLabel(overall)
 
@@ -77,33 +79,23 @@ export function ScoutResults({
         shareCopiedTimerRef.current = setTimeout(() => setShareCopied(false), 2000)
         setShareCopied(true)
       } catch {
-        // clipboard unavailable or permission denied — nothing to surface
         console.error('Share failed: clipboard unavailable')
       }
     }
   }
 
   return (
-    <div
-      style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 120px' }}
-      className="scrollable hs-anim-slide-up"
-    >
-      <div className="hs-label">Your scout report</div>
-      <h2
-        className="hs-h-serif"
-        style={{ fontSize: 28, margin: '4px 0 16px', lineHeight: 1.05 }}
-      >
+    <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 120px' }} className="scrollable hs-anim-slide-up">
+      <div className="hs-label">{t('results.title')}</div>
+      <h2 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 16px', lineHeight: 1.05 }}>
         {propertyName}
       </h2>
 
       <div className="hs-card" style={{ padding: 22, textAlign: 'center', marginBottom: 24 }}>
-        <div
-          className="hs-anim-pop"
-          style={{
-            fontFamily: 'var(--font-serif)', fontSize: 72,
-            lineHeight: 1, letterSpacing: '-0.03em',
-          }}
-        >
+        <div className="hs-anim-pop" style={{
+          fontFamily: 'var(--font-serif)', fontSize: 72,
+          lineHeight: 1, letterSpacing: '-0.03em',
+        }}>
           {overall.toFixed(1)}
         </div>
         <div style={{ margin: '8px 0 6px' }}>
@@ -113,7 +105,7 @@ export function ScoutResults({
           {verdictLabel}
         </div>
         <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>
-          {answered} of {total} answered
+          {answered} {t('results.of')} {total} {t('results.answered')}
         </div>
       </div>
 
@@ -121,18 +113,15 @@ export function ScoutResults({
         fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
         letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 10px',
       }}>
-        By room
+        {t('results.by_room')}
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
         {roomScores.map((r) => (
-          <div
-            key={r.id}
-            style={{
-              padding: '10px 14px',
-              background: 'var(--bg-elev)', border: '1px solid var(--line)',
-              borderRadius: 'var(--r-md)',
-            }}
-          >
+          <div key={r.id} style={{
+            padding: '10px 14px',
+            background: 'var(--bg-elev)', border: '1px solid var(--line)',
+            borderRadius: 'var(--r-md)',
+          }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Icon name={r.icon as IconName} size={14} color="var(--ink-3)" />
               <span style={{ flex: 1, fontSize: 13, fontWeight: 500 }}>{r.name}</span>
@@ -141,36 +130,28 @@ export function ScoutResults({
                 {r.score.toFixed(1)}
               </span>
             </div>
-            <div style={{
-              marginTop: 8,
-              height: 4,
-              borderRadius: 2,
-              background: 'var(--bg-sunk)',
-              overflow: 'hidden',
-            }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: mounted ? `${(r.score / 5) * 100}%` : '0%',
-                  background: getBarColor(r.score),
-                  borderRadius: 2,
-                  transition: 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                }}
-              />
+            <div style={{ marginTop: 8, height: 4, borderRadius: 2, background: 'var(--bg-sunk)', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                width: mounted ? `${(r.score / 5) * 100}%` : '0%',
+                background: getBarColor(r.score),
+                borderRadius: 2,
+                transition: 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              }} />
             </div>
           </div>
         ))}
       </div>
 
       <button onClick={onSave} className="hs-btn hs-btn--primary" style={{ width: '100%' }}>
-        Save report
+        {t('results.save')}
       </button>
       <button
         onClick={() => { void handleShare() }}
         className="hs-btn hs-btn--ghost"
         style={{ width: '100%', marginTop: 8 }}
       >
-        {shareCopied ? 'Copied!' : 'Share'}
+        {shareCopied ? t('results.copied') : t('results.share')}
       </button>
     </div>
   )

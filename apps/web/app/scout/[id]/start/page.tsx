@@ -3,11 +3,13 @@ import { useParams, useRouter } from 'next/navigation'
 import { usePropertyStore, useScoutStore } from '@house-scout/stores'
 import type { ScoutDepth } from '@house-scout/types'
 import { Icon } from '../../../../components/ui/icon'
+import { useTranslation } from '../../../../lib/i18n'
 
 export default function ScoutStartPage() {
   const params = useParams()
   const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : ''
+  const { t } = useTranslation()
 
   const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
   const { startSession } = useScoutStore()
@@ -15,7 +17,7 @@ export default function ScoutStartPage() {
   if (!property) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-3)' }}>
-        Property not found.
+        {t('scout.not_found')}
       </div>
     )
   }
@@ -41,9 +43,9 @@ export default function ScoutStartPage() {
         }}
       >
         <Icon name="chevron-left" size={14} />
-        Back
+        {t('start.back')}
       </button>
-      <div className="hs-label" style={{ marginBottom: 6 }}>Start scouting</div>
+      <div className="hs-label" style={{ marginBottom: 6 }}>{t('start.label')}</div>
       <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '0 0 4px' }}>
         {property.name}
       </h1>
@@ -62,10 +64,10 @@ export default function ScoutStartPage() {
           }}
         >
           <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4 }}>
-            Quick Scout
+            {t('start.quick.title')}
           </div>
           <div style={{ fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5 }}>
-            7 rooms · lifestyle questions · ideal for a first visit
+            {t('start.quick.sub')}
           </div>
         </button>
 
@@ -80,10 +82,10 @@ export default function ScoutStartPage() {
             }}
           >
             <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, color: 'var(--accent)' }}>
-              Deep Inspection
+              {t('start.deep.title')}
             </div>
             <div style={{ fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.5 }}>
-              7 technical categories · structural & systems check · for serious buyers
+              {t('start.deep.sub')}
             </div>
           </button>
         )}

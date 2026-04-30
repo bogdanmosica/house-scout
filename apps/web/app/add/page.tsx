@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import type { PropertyType, PropertyMode, PropertyTone } from '@house-scout/types'
 import { Icon } from '../../components/ui/icon'
+import { useTranslation } from '../../lib/i18n'
 
 const TONES: PropertyTone[] = ['terra', 'sage', 'sky', 'gold']
 
@@ -15,6 +16,7 @@ function AddForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const addProperty = usePropertyStore((s) => s.addProperty)
+  const { t } = useTranslation()
 
   const type = (searchParams.get('type') as PropertyType) ?? 'apartment'
   const mode = (searchParams.get('mode') as PropertyMode) ?? 'rent'
@@ -72,6 +74,9 @@ function AddForm() {
     display: 'block', marginBottom: 6,
   }
 
+  const typeLabel = t(`sheet.${type}`)
+  const modeLabel = mode === 'rent' ? t('sheet.rent') : t('sheet.buy')
+
   return (
     <div style={{ minHeight: '100svh', background: 'var(--bg)', padding: '48px 20px 80px' }}>
       <button
@@ -84,51 +89,49 @@ function AddForm() {
         }}
       >
         <Icon name="chevron-left" size={14} />
-        Back
+        {t('add.back')}
       </button>
       <div style={{ marginBottom: 32 }}>
-        <div className="hs-label">
-          {type.charAt(0).toUpperCase() + type.slice(1)} · {mode === 'rent' ? 'Renting' : 'Buying'}
-        </div>
-        <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 0' }}>Add a property</h1>
+        <div className="hs-label">{typeLabel} · {modeLabel}</div>
+        <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 0' }}>{t('add.title')}</h1>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
-          <label style={labelStyle}>Property name *</label>
+          <label style={labelStyle}>{t('add.name')}</label>
           <input
             style={inputStyle}
-            placeholder="e.g. Corner Flat on Maple"
+            placeholder={t('add.name.ph')}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
 
         <div>
-          <label style={labelStyle}>Address *</label>
+          <label style={labelStyle}>{t('add.address')}</label>
           <input
             style={inputStyle}
-            placeholder="e.g. 412 Maple Ave"
+            placeholder={t('add.address.ph')}
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
 
         <div>
-          <label style={labelStyle}>City</label>
+          <label style={labelStyle}>{t('add.city')}</label>
           <input
             style={inputStyle}
-            placeholder="e.g. East Village"
+            placeholder={t('add.city.ph')}
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
         </div>
 
         <div>
-          <label style={labelStyle}>Price</label>
+          <label style={labelStyle}>{t('add.price')}</label>
           <input
             style={inputStyle}
-            placeholder={mode === 'rent' ? 'e.g. $2,850/mo' : 'e.g. $485,000'}
+            placeholder={mode === 'rent' ? t('add.price.ph.rent') : t('add.price.ph.buy')}
             value={price}
             onChange={(e) => setPrice(e.target.value)}
           />
@@ -136,7 +139,7 @@ function AddForm() {
 
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
-            <label style={labelStyle}>Beds</label>
+            <label style={labelStyle}>{t('add.beds')}</label>
             <input
               style={inputStyle}
               type="number" min={0} max={20}
@@ -145,7 +148,7 @@ function AddForm() {
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={labelStyle}>Baths</label>
+            <label style={labelStyle}>{t('add.baths')}</label>
             <input
               style={inputStyle}
               type="number" min={0} max={20}
@@ -154,7 +157,7 @@ function AddForm() {
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={labelStyle}>Sqft</label>
+            <label style={labelStyle}>{t('add.sqft')}</label>
             <input
               style={inputStyle}
               type="number" min={0}
@@ -171,7 +174,7 @@ function AddForm() {
           className="hs-btn hs-btn--primary"
           style={{ width: '100%', marginTop: 8, opacity: canSubmit ? 1 : 0.4 }}
         >
-          Start scouting →
+          {t('add.cta')}
         </button>
       </div>
     </div>

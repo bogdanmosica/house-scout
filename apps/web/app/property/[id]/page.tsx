@@ -6,20 +6,21 @@ import { Photo } from '../../../components/ui/photo'
 import { StarRow } from '../../../components/ui/star'
 import { Icon } from '../../../components/ui/icon'
 import type { IconName } from '../../../components/ui/icon'
-import { ROOMS } from '../../../lib/data'
+import { useTranslation } from '../../../lib/i18n'
 
 export default function PropertyDetailPage() {
   const params = useParams()
   const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : ''
+  const { t } = useTranslation()
 
   const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
 
   if (!property) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-3)' }}>
-        Property not found.{' '}
-        <Link href="/" style={{ color: 'var(--accent)' }}>Go home</Link>
+        {t('prop.not_found')}{' '}
+        <Link href="/" style={{ color: 'var(--accent)' }}>{t('prop.go_home')}</Link>
       </div>
     )
   }
@@ -39,11 +40,11 @@ export default function PropertyDetailPage() {
           }}
         >
           <Icon name="chevron-left" size={14} />
-          Back
+          {t('prop.back')}
         </button>
 
         <div className="hs-label" style={{ marginBottom: 4 }}>
-          {property.type} · {property.mode === 'rent' ? 'Renting' : 'Buying'}
+          {t(`sheet.${property.type}`)} · {property.mode === 'rent' ? t('prop.renting') : t('prop.buying')}
         </div>
         <h1 className="hs-h-serif" style={{ fontSize: 30, margin: '0 0 4px' }}>
           {property.name}
@@ -54,38 +55,35 @@ export default function PropertyDetailPage() {
 
         <div style={{ display: 'flex', gap: 16, fontSize: 13, color: 'var(--ink-2)', marginBottom: 20 }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Icon name="bed" size={14} /> {property.beds} bed
+            <Icon name="bed" size={14} /> {property.beds}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Icon name="bath" size={14} /> {property.baths} bath
+            <Icon name="bath" size={14} /> {property.baths}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Icon name="sqft" size={14} /> {property.sqft.toLocaleString()} sqft
+            <Icon name="sqft" size={14} /> {property.sqft.toLocaleString()} {t('prop.sqft')}
           </span>
         </div>
 
         {property.rating !== null ? (
           <div className="hs-card" style={{ padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
             <div>
-              <div
-                className="hs-anim-pop"
-                style={{
-                  fontFamily: 'var(--font-serif)', fontSize: 64,
-                  lineHeight: 1, letterSpacing: '-0.03em',
-                }}
-              >
+              <div className="hs-anim-pop" style={{
+                fontFamily: 'var(--font-serif)', fontSize: 64,
+                lineHeight: 1, letterSpacing: '-0.03em',
+              }}>
                 {property.rating.toFixed(1)}
               </div>
               <StarRow score={property.rating} size={16} />
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 8 }}>Scout rating</div>
+              <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 8 }}>{t('prop.rating')}</div>
               <div style={{ fontSize: 18, fontWeight: 700 }}>{property.price}</div>
             </div>
           </div>
         ) : (
           <div className="hs-card" style={{ padding: 20, marginBottom: 24, textAlign: 'center', color: 'var(--ink-3)' }}>
-            <div style={{ fontSize: 13 }}>Not scouted yet</div>
+            <div style={{ fontSize: 13 }}>{t('prop.not_scouted')}</div>
           </div>
         )}
 
@@ -95,7 +93,7 @@ export default function PropertyDetailPage() {
               fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
               letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 10px',
             }}>
-              Highlights
+              {t('prop.highlights')}
             </h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {property.highlights.map((h) => (
@@ -111,7 +109,7 @@ export default function PropertyDetailPage() {
               fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
               letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 10px',
             }}>
-              Notes
+              {t('prop.notes')}
             </h3>
             <p style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.6, margin: 0 }}>
               {property.notes}
@@ -125,15 +123,11 @@ export default function PropertyDetailPage() {
             className="hs-btn hs-btn--primary"
             style={{ width: '100%', justifyContent: 'center' }}
           >
-            {property.status === 'todo' ? 'Start scout' : 'Scout again'}
+            {property.status === 'todo' ? t('prop.start') : t('prop.again')}
             <Icon name="arrow" size={16} color="currentColor" />
           </Link>
-          <Link
-            href="/"
-            className="hs-btn hs-btn--ghost"
-            style={{ width: '100%', justifyContent: 'center' }}
-          >
-            Back to shortlist
+          <Link href="/" className="hs-btn hs-btn--ghost" style={{ width: '100%', justifyContent: 'center' }}>
+            {t('prop.shortlist')}
           </Link>
         </div>
       </div>

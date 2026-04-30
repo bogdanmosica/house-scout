@@ -3,22 +3,19 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Icon } from './icon'
 import type { PropertyMode, PropertyType } from '@house-scout/types'
+import { useTranslation } from '../../lib/i18n'
 
 interface Props {
   open: boolean
   onClose: () => void
 }
 
-const TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'house',     label: 'House'     },
-  { value: 'condo',     label: 'Condo'     },
-  { value: 'loft',      label: 'Loft'      },
-]
+const TYPE_VALUES: PropertyType[] = ['apartment', 'house', 'condo', 'loft']
 
 export function AddSheet({ open, onClose }: Props) {
   const router = useRouter()
   const [mode, setMode] = useState<PropertyMode | null>(null)
+  const { t } = useTranslation()
 
   const handleType = (type: PropertyType) => {
     router.push(`/add?mode=${mode}&type=${type}`)
@@ -37,11 +34,7 @@ export function AddSheet({ open, onClose }: Props) {
     <>
       <div
         onClick={handleClose}
-        style={{
-          position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.4)',
-          zIndex: 100,
-        }}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 100 }}
       />
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
@@ -60,7 +53,7 @@ export function AddSheet({ open, onClose }: Props) {
         {mode === null ? (
           <>
             <h2 className="hs-h-serif" style={{ fontSize: 22, margin: '0 0 20px' }}>
-              What are you looking for?
+              {t('sheet.title')}
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {(['rent', 'buy'] as PropertyMode[]).map((m) => (
@@ -75,12 +68,10 @@ export function AddSheet({ open, onClose }: Props) {
                   }}
                 >
                   <div style={{ fontSize: 16, fontWeight: 700 }}>
-                    {m === 'rent' ? 'Renting' : 'Buying'}
+                    {m === 'rent' ? t('sheet.rent') : t('sheet.buy')}
                   </div>
                   <div style={{ fontSize: 13, color: 'var(--ink-2)', marginTop: 2 }}>
-                    {m === 'rent'
-                      ? 'Evaluate lifestyle fit & lease flexibility'
-                      : 'Assess structural quality & resale prospects'}
+                    {m === 'rent' ? t('sheet.rent.sub') : t('sheet.buy.sub')}
                   </div>
                 </button>
               ))}
@@ -98,16 +89,16 @@ export function AddSheet({ open, onClose }: Props) {
               }}
             >
               <Icon name="chevron-left" size={14} />
-              Back
+              {t('sheet.back')}
             </button>
             <h2 className="hs-h-serif" style={{ fontSize: 22, margin: '0 0 20px' }}>
-              What type of property?
+              {t('sheet.type')}
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              {TYPES.map((t) => (
+              {TYPE_VALUES.map((type) => (
                 <button
-                  key={t.value}
-                  onClick={() => handleType(t.value)}
+                  key={type}
+                  onClick={() => handleType(type)}
                   className="hs-card hs-focusable"
                   style={{
                     padding: '18px 16px', textAlign: 'left', cursor: 'pointer',
@@ -115,7 +106,7 @@ export function AddSheet({ open, onClose }: Props) {
                     borderRadius: 'var(--r-lg)', width: '100%',
                   }}
                 >
-                  <div style={{ fontSize: 15, fontWeight: 700 }}>{t.label}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700 }}>{t(`sheet.${type}`)}</div>
                 </button>
               ))}
             </div>

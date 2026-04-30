@@ -12,11 +12,13 @@ import { BottomNav } from '../../../components/scout/bottom-nav'
 import { QuestionCard } from '../../../components/ui/question-card'
 import { ScoutResults } from '../../../components/scout/results'
 import { Icon } from '../../../components/ui/icon'
+import { useTranslation, translateQuestion, translateDefs } from '../../../lib/i18n'
 
 export default function ScoutPage() {
   const params = useParams()
   const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : ''
+  const { t } = useTranslation()
 
   const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
   const setRating = usePropertyStore((s) => s.setRating)
@@ -26,7 +28,6 @@ export default function ScoutPage() {
   const [roomIdx, setRoomIdx] = useState(0)
   const isSaving = useRef(false)
 
-  // Redirect to start screen if no session — session is started there
   useEffect(() => {
     if (property && !session && !isSaving.current) {
       router.replace(`/scout/${id}/start`)
@@ -34,12 +35,25 @@ export default function ScoutPage() {
   }, [property, session, id, router])
 
   const isInspection = session?.inspectionDepth === 'inspection'
-  const categories = isInspection ? INSPECTION_CATEGORIES : ROOMS
-
-  const questionsByRoom = useMemo(
-    () => isInspection ? getInspectionQuestions() : getQuestions(session?.mode ?? 'rent'),
-    [isInspection, session?.mode]
+  const rawCategories: { id: string; name: string; desc: string; icon: string }[] =
+    isInspection ? INSPECTION_CATEGORIES : ROOMS
+  const categories = useMemo(
+    () => translateDefs(rawCategories, t, isInspection ? 'insp' : 'room'),
+    [rawCategories, t, isInspection],
   )
+
+  const rawQuestionsByRoom = useMemo(
+    () => isInspection ? getInspectionQuestions() : getQuestions(session?.mode ?? 'rent'),
+    [isInspection, session?.mode],
+  )
+
+  const questionsByRoom = useMemo(() => {
+    const out: Record<string, Question[]> = {}
+    for (const key of Object.keys(rawQuestionsByRoom)) {
+      out[key] = (rawQuestionsByRoom as Record<string, Question[]>)[key]!.map((q) => translateQuestion(q, t))
+    }
+    return out
+  }, [rawQuestionsByRoom, t])
 
   const answers = session?.answers ?? {}
 
@@ -47,13 +61,13 @@ export default function ScoutPage() {
   if (!category || !property || !session) {
     return (
       <div style={{ padding: 40, textAlign: 'center', color: 'var(--ink-3)' }}>
-        {!property ? 'Property not found.' : 'Loading…'}
+        {!property ? t('scout.not_found') : t('scout.loading')}
       </div>
     )
   }
 
-  const qs: Question[] = (questionsByRoom as Record<string, Question[]>)[category.id] ?? []
-  const rating = computeRating(questionsByRoom, answers)
+  const qs: Question[] = questionsByRoom[category.id] ?? []
+  const rating = computeRating(rawQuestionsByRoom, answers)
   const answeredInRoom = qs.filter((q) => answers[`${category.id}.${q.id}`] != null).length
   const allInRoomAnswered = answeredInRoom === qs.length && qs.length > 0
   const totalAnswered = Object.values(answers).filter((v) => v != null).length
@@ -63,7 +77,7 @@ export default function ScoutPage() {
   }
 
   const handleCurrentRoom = (idx: number) => {
-    const c = categories[idx]
+    const c = rawCategories[idx]
     if (c) setCurrentRoom(c.id)
     setRoomIdx(idx)
   }
@@ -90,7 +104,7 @@ export default function ScoutPage() {
   }
 
   const handleBack = () => {
-    if (window.confirm('Leave scout? Answers will be lost.')) {
+    if (window.confirm(t('scout.leave'))) {
       isSaving.current = true
       endSession()
       router.push('/')
@@ -127,7 +141,7 @@ export default function ScoutPage() {
           }}
         >
           <Icon name="chevron-left" size={14} />
-          Back
+          {t('scout.back')}
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
           <Photo tone={property.tone} height={36} style={{ width: 36, borderRadius: 10 }} label="" />
@@ -136,7 +150,7 @@ export default function ScoutPage() {
               {property.name}
             </div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>
-              {property.address} · {isInspection ? 'Deep Inspection' : session.mode === 'rent' ? 'Renting' : 'Buying'}
+              {property.address} · {isInspection ? t('scout.deep') : session.mode === 'rent' ? t('scout.renting') : t('scout.buying')}
             </div>
           </div>
         </div>
@@ -153,22 +167,19 @@ export default function ScoutPage() {
       <Photo
         tone={property.tone}
         height={200}
-        label={`${category.name.toLowerCase()} — tap to add photo`}
+        label={`${category.name.toLowerCase()}${t('scout.photo')}`}
         style={{ margin: '0 20px', borderRadius: 'var(--r-lg)' }}
       />
 
       <div style={{ padding: '16px 20px 8px' }}>
         <div className="hs-label">
-          {isInspection ? 'Inspection' : 'Room'} {roomIdx + 1} of {categories.length}
+          {isInspection ? t('scout.label.insp') : t('scout.label.room')} {roomIdx + 1} of {categories.length}
         </div>
         <h2 className="hs-h-serif" style={{ fontSize: 28, margin: '2px 0 4px' }}>{category.name}</h2>
         <div style={{ fontSize: 13, color: 'var(--ink-2)' }}>{category.desc}</div>
       </div>
 
-      <div
-        style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 120px' }}
-        className="scrollable"
-      >
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 120px' }} className="scrollable">
         {qs.map((q, i) => (
           <div key={q.id} style={{ marginBottom: 12 }}>
             <QuestionCard

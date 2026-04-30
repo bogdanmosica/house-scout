@@ -7,11 +7,13 @@ import { PropertyCard } from '../components/property-card'
 import { isOnboarded } from '../lib/onboarding'
 import { BottomTabBar } from '../components/ui/bottom-tab-bar'
 import { AddSheet } from '../components/ui/add-sheet'
+import { useTranslation } from '../lib/i18n'
 
 export default function HomePage() {
   const router = useRouter()
   const { properties, initializeWithSeed } = usePropertyStore()
   const [sheetOpen, setSheetOpen] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (!isOnboarded()) {
@@ -27,12 +29,9 @@ export default function HomePage() {
   return (
     <main style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px 100px' }}>
       <div style={{ marginBottom: 28 }}>
-        <div className="hs-label" style={{ marginBottom: 4 }}>House Scout</div>
-        <h1
-          className="hs-h-serif"
-          style={{ fontSize: 32, margin: 0 }}
-        >
-          Your shortlist
+        <div className="hs-label" style={{ marginBottom: 4 }}>{t('app.name')}</div>
+        <h1 className="hs-h-serif" style={{ fontSize: 32, margin: 0 }}>
+          {t('home.title')}
         </h1>
       </div>
 
@@ -42,7 +41,7 @@ export default function HomePage() {
             fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
             letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 12px',
           }}>
-            Scouted · {scouted.length}
+            {t('home.scouted')} · {scouted.length}
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
             {scouted.map((p) => (
@@ -58,7 +57,7 @@ export default function HomePage() {
             fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
             letterSpacing: '0.08em', textTransform: 'uppercase', margin: '0 0 12px',
           }}>
-            To scout · {todo.length}
+            {t('home.todo')} · {todo.length}
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
             {todo.map((p) => (
@@ -70,36 +69,26 @@ export default function HomePage() {
 
       {properties.length === 0 && (
         <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--ink-3)' }}>
-          <div
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: '50%',
-              background: 'var(--accent-soft)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 32,
-              margin: '0 auto 20px',
-            }}
-          >
+          <div style={{
+            width: 72, height: 72, borderRadius: '50%',
+            background: 'var(--accent-soft)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 32, margin: '0 auto 20px',
+          }}>
             🏠
           </div>
-          <h2
-            className="hs-h-serif"
-            style={{ fontSize: 22, margin: '0 0 10px', color: 'var(--ink)' }}
-          >
-            Ready to scout your first property?
+          <h2 className="hs-h-serif" style={{ fontSize: 22, margin: '0 0 10px', color: 'var(--ink)' }}>
+            {t('home.empty.title')}
           </h2>
           <p style={{ fontSize: 14, margin: '0 0 24px', color: 'var(--ink-3)', lineHeight: 1.5 }}>
-            Walk through every room and get a 1–5 star score.
+            {t('home.empty.sub')}
           </p>
           <button
             onClick={() => setSheetOpen(true)}
             className="hs-btn hs-btn--accent"
             style={{ display: 'inline-block' }}
           >
-            Add first property →
+            {t('home.empty.cta')}
           </button>
         </div>
       )}

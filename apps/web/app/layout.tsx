@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Fraunces, Inter } from 'next/font/google'
+import { LocaleProvider } from '../lib/i18n'
 import './globals.css'
 
 const fraunces = Fraunces({
@@ -44,7 +45,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-svh flex flex-col bg-bg text-ink font-sans">
-        {children}
+        <LocaleProvider>{children}</LocaleProvider>
       </body>
     </html>
   )

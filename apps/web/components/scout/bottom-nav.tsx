@@ -1,4 +1,6 @@
+'use client'
 import { Icon } from '../ui/icon'
+import { useTranslation } from '../../lib/i18n'
 
 interface BottomNavProps {
   roomIdx: number
@@ -17,6 +19,7 @@ export function BottomNav({
 }: BottomNavProps) {
   const isFirst = roomIdx === 0
   const isLast = roomIdx === totalRooms - 1
+  const { t } = useTranslation()
 
   return (
     <div style={{
@@ -40,7 +43,7 @@ export function BottomNav({
       </button>
 
       <div style={{ flex: 1, textAlign: 'center', fontSize: 12, color: 'var(--ink-3)' }}>
-        {answeredInRoom}/{totalInRoom} answered · {totalAnswered} total
+        {answeredInRoom}/{totalInRoom} {t('bnav.answered')} · {totalAnswered} {t('bnav.total')}
       </div>
 
       <button
@@ -54,7 +57,7 @@ export function BottomNav({
           display: 'flex', alignItems: 'center', gap: 6,
         }}
       >
-        {isLast ? 'Finish' : 'Next room'}
+        {isLast ? t('bnav.finish') : t('bnav.next')}
         <Icon name="arrow" size={14} color="#fff" />
       </button>
     </div>

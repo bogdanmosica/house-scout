@@ -1,8 +1,10 @@
+'use client'
 import Link from 'next/link'
 import type { Property } from '@house-scout/types'
 import { Photo } from './ui/photo'
 import { StarRow } from './ui/star'
 import { Icon } from './ui/icon'
+import { useTranslation } from '../lib/i18n'
 
 interface PropertyCardProps {
   property: Property
@@ -10,6 +12,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property: p }: PropertyCardProps) {
   const href = p.status === 'todo' ? `/scout/${p.id}` : `/property/${p.id}`
+  const { t } = useTranslation()
 
   return (
     <Link href={href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
@@ -24,11 +27,11 @@ export function PropertyCard({ property: p }: PropertyCardProps) {
         <div style={{ padding: '14px 16px 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
             <span className="hs-chip" style={{ fontSize: 10, padding: '3px 8px' }}>
-              {p.mode === 'rent' ? 'Rent' : 'Buy'}
+              {p.mode === 'rent' ? t('card.rent') : t('card.buy')}
             </span>
             {p.status === 'todo' && (
               <span className="hs-chip" style={{ fontSize: 10, padding: '3px 8px', color: 'var(--accent)' }}>
-                To scout
+                {t('card.todo')}
               </span>
             )}
           </div>
@@ -48,7 +51,7 @@ export function PropertyCard({ property: p }: PropertyCardProps) {
               <Icon name="bath" size={12} /> {p.baths}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Icon name="sqft" size={12} /> {p.sqft.toLocaleString()} sqft
+              <Icon name="sqft" size={12} /> {p.sqft.toLocaleString()} {t('prop.sqft')}
             </span>
           </div>
 
