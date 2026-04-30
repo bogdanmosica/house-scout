@@ -5,6 +5,7 @@ import './globals.css'
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
+  axes: ['opsz', 'SOFT'],
   display: 'swap',
 })
 
@@ -38,9 +39,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="light"
+      data-accent="terra"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-svh flex flex-col bg-bg text-ink font-sans">
+        {children}
+      </body>
     </html>
   )
 }

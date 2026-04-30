@@ -46,6 +46,7 @@ house-scout/
 | `superpowers/verification-before-completion/SKILL.md` | Before claiming work is complete |
 | `superpowers/requesting-code-review/SKILL.md` | After completing a feature |
 | `superpowers/finishing-a-development-branch/SKILL.md` | When implementation is complete |
+| `tailwind-v4/SKILL.md` | Tailwind v4 CSS-first config, design tokens, component patterns — read before any CSS/component work |
 | `design-token-check.md` | Verify no hardcoded colors/values in components |
 | `scoring.md` | Property scoring algorithm reference |
 | `typescript.md` | TypeScript strict mode patterns for this project |

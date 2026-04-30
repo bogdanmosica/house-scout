@@ -69,7 +69,7 @@ CSS variables use `--bg`, `--ink`, `--accent` etc. (shadcn-compatible naming). A
 - **Framework**: Next.js 16 App Router (`apps/web`) on Vercel
 - **Language**: TypeScript — strict mode, `noUncheckedIndexedAccess` (see `.claude/skills/typescript.md`)
 - **State**: Zustand — `usePropertyStore` (persisted) + `useScoutStore` (ephemeral session) (see `.claude/skills/zustand.md`)
-- **UI**: shadcn/ui + Tailwind CSS with CSS variable tokens from `styles/globals.css`
+- **UI**: shadcn/ui + Tailwind CSS v4 — CSS-first config via `@theme` in `globals.css` (see `.claude/skills/tailwind-v4/SKILL.md`)
 - **Fonts**: `next/font/google` — Fraunces + Inter
 - **Images**: `next/image` for all listing photos
 - **Deployment**: Vercel (see `.claude/skills/vercel.md`, `/deploy` command)
@@ -109,4 +109,4 @@ Mark these hookpoints with `// TODO(ai): <description>` so they're easy to find.
 
 Custom commands live in `.claude/commands/`. Skills in `.claude/skills/`.
 
-When implementing a new screen: read `DESIGN.md` first, match the token system exactly — no hardcoded hex values in components.
+When implementing a new screen: read `DESIGN.md` + `.claude/skills/tailwind-v4/SKILL.md` first. Match token system exactly — no hardcoded hex values in components.

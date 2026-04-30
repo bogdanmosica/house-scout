@@ -1,16 +1,9 @@
 'use client'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import type { PropertyType, PropertyMode, PropertyTone } from '@house-scout/types'
 import { Icon } from '../../components/ui/icon'
-
-const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
-  { value: 'apartment', label: 'Apartment' },
-  { value: 'house',     label: 'House'     },
-  { value: 'condo',     label: 'Condo'     },
-  { value: 'loft',      label: 'Loft'      },
-]
 
 const TONES: PropertyTone[] = ['terra', 'sage', 'sky', 'gold']
 
@@ -18,15 +11,17 @@ function randomTone(): PropertyTone {
   return TONES[Math.floor(Math.random() * TONES.length)] ?? 'terra'
 }
 
-export default function AddPropertyPage() {
+function AddForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const addProperty = usePropertyStore((s) => s.addProperty)
+
+  const type = (searchParams.get('type') as PropertyType) ?? 'apartment'
+  const mode = (searchParams.get('mode') as PropertyMode) ?? 'rent'
 
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
-  const [type, setType] = useState<PropertyType>('apartment')
-  const [mode, setMode] = useState<PropertyMode>('rent')
   const [price, setPrice] = useState('')
   const [beds, setBeds] = useState(1)
   const [baths, setBaths] = useState(1)
@@ -91,7 +86,9 @@ export default function AddPropertyPage() {
         Back
       </button>
       <div style={{ marginBottom: 32 }}>
-        <div className="hs-label">New property</div>
+        <div className="hs-label">
+          {type.charAt(0).toUpperCase() + type.slice(1)} · {mode === 'rent' ? 'Renting' : 'Buying'}
+        </div>
         <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 0' }}>Add a property</h1>
       </div>
 
@@ -124,50 +121,6 @@ export default function AddPropertyPage() {
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
-        </div>
-
-        <div>
-          <label style={labelStyle}>Type</label>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {PROPERTY_TYPES.map((t) => (
-              <button
-                key={t.value}
-                onClick={() => setType(t.value)}
-                style={{
-                  flex: 1, padding: '10px 6px',
-                  border: `1px solid ${type === t.value ? 'var(--ink)' : 'var(--line-strong)'}`,
-                  background: type === t.value ? 'var(--ink)' : 'var(--bg-elev)',
-                  color: type === t.value ? '#fff' : 'var(--ink-2)',
-                  borderRadius: 10, fontSize: 12, fontWeight: 600,
-                  fontFamily: 'inherit', cursor: 'pointer',
-                }}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label style={labelStyle}>Mode</label>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {(['rent', 'buy'] as PropertyMode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                style={{
-                  flex: 1, padding: '10px 6px',
-                  border: `1px solid ${mode === m ? 'var(--ink)' : 'var(--line-strong)'}`,
-                  background: mode === m ? 'var(--ink)' : 'var(--bg-elev)',
-                  color: mode === m ? '#fff' : 'var(--ink-2)',
-                  borderRadius: 10, fontSize: 12, fontWeight: 700,
-                  fontFamily: 'inherit', cursor: 'pointer', textTransform: 'uppercase',
-                }}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div>
@@ -221,5 +174,13 @@ export default function AddPropertyPage() {
         </button>
       </div>
     </div>
+  )
+}
+
+export default function AddPropertyPage() {
+  return (
+    <Suspense>
+      <AddForm />
+    </Suspense>
   )
 }

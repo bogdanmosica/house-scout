@@ -1,15 +1,17 @@
 'use client'
-import { useEffect } from 'react'
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import { SEED_PROPERTIES } from '../lib/data'
 import { PropertyCard } from '../components/property-card'
 import { isOnboarded } from '../lib/onboarding'
+import { BottomTabBar } from '../components/ui/bottom-tab-bar'
+import { AddSheet } from '../components/ui/add-sheet'
 
 export default function HomePage() {
   const router = useRouter()
   const { properties, initializeWithSeed } = usePropertyStore()
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
     if (!isOnboarded()) {
@@ -92,24 +94,18 @@ export default function HomePage() {
           <p style={{ fontSize: 14, margin: '0 0 24px', color: 'var(--ink-3)', lineHeight: 1.5 }}>
             Walk through every room and get a 1–5 star score.
           </p>
-          <Link href="/add" className="hs-btn hs-btn--accent" style={{ display: 'inline-block' }}>
+          <button
+            onClick={() => setSheetOpen(true)}
+            className="hs-btn hs-btn--accent"
+            style={{ display: 'inline-block' }}
+          >
             Add first property →
-          </Link>
+          </button>
         </div>
       )}
 
-      <Link
-        href="/add"
-        style={{
-          position: 'fixed', right: 20, bottom: 32,
-          width: 52, height: 52, borderRadius: '50%',
-          background: 'var(--ink)', color: 'var(--bg)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: 'var(--shadow-lift)', textDecoration: 'none', fontSize: 24,
-        }}
-      >
-        +
-      </Link>
+      <BottomTabBar onAddTap={() => setSheetOpen(true)} />
+      <AddSheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
     </main>
   )
 }

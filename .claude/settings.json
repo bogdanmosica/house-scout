@@ -1,9 +1,4 @@
 {
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true,
-    "caveman@claude-plugins-official": true,
-    "figma@claude-plugins-official": true
-  },
   "permissions": {
     "allow": [
       "Bash(pnpm *)",
@@ -20,5 +15,10 @@
       "Bash(pnpm build)",
       "Bash(pnpm dev)"
     ]
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true
   }
 }
