@@ -17,6 +17,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'House Scout',
   description: 'Mobile-first property scouting app',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+  },
 }
 
 export const viewport: Viewport = {
@@ -36,10 +40,6 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
     >
-      <head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   )
