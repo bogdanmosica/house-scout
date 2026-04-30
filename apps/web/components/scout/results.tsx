@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { computeRoomScore } from '../../lib/scoring'
 import type { Question, AnswerRaw } from '@house-scout/types'
 import { StarRow } from '../ui/star'
@@ -44,9 +44,15 @@ export function ScoutResults({
 }: ScoutResultsProps) {
   const [shareCopied, setShareCopied] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const shareCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    requestAnimationFrame(() => setMounted(true))
+    const id = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  useEffect(() => () => {
+    if (shareCopiedTimerRef.current) clearTimeout(shareCopiedTimerRef.current)
   }, [])
 
   const roomScores = categoryDefs
@@ -66,9 +72,14 @@ export function ScoutResults({
       }
     }
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      await navigator.clipboard.writeText(shareText)
-      setShareCopied(true)
-      setTimeout(() => setShareCopied(false), 2000)
+      try {
+        await navigator.clipboard.writeText(shareText)
+        shareCopiedTimerRef.current = setTimeout(() => setShareCopied(false), 2000)
+        setShareCopied(true)
+      } catch {
+        // clipboard unavailable or permission denied — nothing to surface
+        console.error('Share failed: clipboard unavailable')
+      }
     }
   }
 
