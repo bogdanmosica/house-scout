@@ -1,18 +1,21 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { markOnboarded } from '../../lib/onboarding'
+import { isOnboarded, markOnboarded } from '../../lib/onboarding'
 
 const SLIDES = [
   {
+    icon: '🏡',
     title: 'Scout smarter',
     subtitle: 'Stop second-guessing. Rate every room as you walk through.',
   },
   {
+    icon: '🚪',
     title: 'Room by room',
     subtitle: 'Entrance, kitchen, bedroom, bath — a structured checklist for every space.',
   },
   {
+    icon: '⭐',
     title: 'Get a score',
     subtitle: 'Walk out with a 1–5 star rating so you can compare properties head to head.',
   },
@@ -21,6 +24,10 @@ const SLIDES = [
 export default function OnboardingPage() {
   const router = useRouter()
   const [slide, setSlide] = useState(0)
+
+  useEffect(() => {
+    if (isOnboarded()) router.replace('/')
+  }, [router])
 
   const isLast = slide === SLIDES.length - 1
   const current = SLIDES[slide]
@@ -79,14 +86,14 @@ export default function OnboardingPage() {
             marginBottom: 32,
           }}
         >
-          {slide === 0 ? '🏡' : slide === 1 ? '🚪' : '⭐'}
+          {current.icon}
         </div>
 
         <h1
           className="hs-h-serif"
           style={{ fontSize: 32, margin: '0 0 16px', color: 'var(--ink)' }}
         >
-          {current?.title}
+          {current.title}
         </h1>
 
         <p
@@ -98,7 +105,7 @@ export default function OnboardingPage() {
             maxWidth: 320,
           }}
         >
-          {current?.subtitle}
+          {current.subtitle}
         </p>
       </div>
 
