@@ -31,6 +31,7 @@ function AddForm() {
 
   const handleSubmit = () => {
     if (!canSubmit) return
+    // eslint-disable-next-line react-hooks/purity
     const id = `p${Date.now()}`
     addProperty({
       id,
