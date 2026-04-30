@@ -22,7 +22,7 @@ export default function HomePage() {
   const todo = properties.filter((p) => p.status === 'todo')
 
   return (
-    <main style={{ maxWidth: 640, margin: '0 auto', padding: '24px 16px 100px' }}>
+    <main style={{ width: '100%', maxWidth: 640, margin: '0 auto', padding: '24px 16px 100px' }}>
       <div style={{ marginBottom: 28 }}>
         <div className="hs-label" style={{ marginBottom: 4 }}>{t('app.name')}</div>
         <h1 className="hs-h-serif" style={{ fontSize: 32, margin: 0 }}>

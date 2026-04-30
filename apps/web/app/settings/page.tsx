@@ -15,7 +15,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <main style={{ maxWidth: 860, margin: '0 auto', padding: '48px 16px 100px' }}>
+    <main style={{ width: '100%', maxWidth: 860, margin: '0 auto', padding: '48px 16px 100px' }}>
       <button
         onClick={() => router.push('/')}
         style={{

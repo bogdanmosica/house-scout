@@ -26,7 +26,7 @@ export default function PropertyDetailPage() {
   }
 
   return (
-    <main style={{ maxWidth: 640, margin: '0 auto', padding: '0 0 100px' }}>
+    <main style={{ width: '100%', maxWidth: 640, margin: '0 auto', padding: '0 0 100px' }}>
       <Photo tone={property.tone} height={260} label={property.name} style={{ borderRadius: 0 }} />
 
       <div style={{ padding: '20px 20px 0' }}>
