@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePropertyStore } from '@house-scout/stores'
@@ -13,8 +14,15 @@ export default function PropertyDetailPage() {
   const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : ''
   const { t } = useTranslation()
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
+  const deleteProperty = usePropertyStore((s) => s.deleteProperty)
+
+  function handleDelete() {
+    deleteProperty(id)
+    router.push('/')
+  }
 
   if (!property) {
     return (
@@ -129,8 +137,65 @@ export default function PropertyDetailPage() {
           <Link href="/" className="hs-btn hs-btn--ghost" style={{ width: '100%', justifyContent: 'center' }}>
             {t('prop.shortlist')}
           </Link>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            style={{
+              width: '100%', padding: '12px 20px', borderRadius: 8,
+              border: '1.5px solid #c0392b', background: 'none',
+              color: '#c0392b', fontSize: 14, fontWeight: 600,
+              fontFamily: 'inherit', cursor: 'pointer', marginTop: 8,
+            }}
+          >
+            {t('prop.delete')}
+          </button>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div
+          onClick={() => setShowDeleteConfirm(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 100, padding: 20,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--bg)', borderRadius: 16, padding: '28px 24px',
+              maxWidth: 360, width: '100%', boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+            }}
+          >
+            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 22, margin: '0 0 8px' }}>
+              {t('prop.delete.confirm.title').replace('{name}', property.name)}
+            </h2>
+            <p style={{ fontSize: 14, color: 'var(--ink-3)', margin: '0 0 24px', lineHeight: 1.5 }}>
+              {t('prop.delete.confirm.body')}
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="hs-btn hs-btn--ghost"
+                style={{ flex: 1, justifyContent: 'center' }}
+              >
+                {t('prop.delete.confirm.cancel')}
+              </button>
+              <button
+                onClick={handleDelete}
+                style={{
+                  flex: 1, padding: '12px 20px', borderRadius: 8,
+                  border: 'none', background: '#c0392b',
+                  color: '#fff', fontSize: 14, fontWeight: 600,
+                  fontFamily: 'inherit', cursor: 'pointer',
+                }}
+              >
+                {t('prop.delete.confirm.action')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }
