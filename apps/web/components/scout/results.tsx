@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { computeRoomScore } from '../../lib/scoring'
 import type { Question, AnswerRaw } from '@house-scout/types'
 import { StarRow } from '../ui/star'
@@ -43,6 +43,11 @@ export function ScoutResults({
   categoryDefs, questionsByRoom, answers, onSave,
 }: ScoutResultsProps) {
   const [shareCopied, setShareCopied] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    requestAnimationFrame(() => setMounted(true))
+  }, [])
 
   const roomScores = categoryDefs
     .map((r) => ({ ...r, score: computeRoomScore(r.id, questionsByRoom, answers) }))
@@ -135,7 +140,7 @@ export function ScoutResults({
               <div
                 style={{
                   height: '100%',
-                  width: `${(r.score / 5) * 100}%`,
+                  width: mounted ? `${(r.score / 5) * 100}%` : '0%',
                   background: getBarColor(r.score),
                   borderRadius: 2,
                   transition: 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
