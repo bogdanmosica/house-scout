@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
-import { SEED_PROPERTIES } from '../lib/data'
 import { PropertyCard } from '../components/property-card'
 import { isOnboarded } from '../lib/onboarding'
 import { BottomTabBar } from '../components/ui/bottom-tab-bar'
@@ -11,17 +10,13 @@ import { useTranslation } from '../lib/i18n'
 
 export default function HomePage() {
   const router = useRouter()
-  const { properties, initializeWithSeed } = usePropertyStore()
+  const { properties } = usePropertyStore()
   const [sheetOpen, setSheetOpen] = useState(false)
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (!isOnboarded()) {
-      router.push('/onboarding')
-      return
-    }
-    initializeWithSeed(SEED_PROPERTIES)
-  }, [initializeWithSeed, router])
+    if (!isOnboarded()) router.push('/onboarding')
+  }, [router])
 
   const scouted = properties.filter((p) => p.status === 'scouted')
   const todo = properties.filter((p) => p.status === 'todo')
