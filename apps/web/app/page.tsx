@@ -1,16 +1,23 @@
 'use client'
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import { SEED_PROPERTIES } from '../lib/data'
 import { PropertyCard } from '../components/property-card'
+import { isOnboarded } from '../lib/onboarding'
 
 export default function HomePage() {
+  const router = useRouter()
   const { properties, initializeWithSeed } = usePropertyStore()
 
   useEffect(() => {
+    if (!isOnboarded()) {
+      router.push('/onboarding')
+      return
+    }
     initializeWithSeed(SEED_PROPERTIES)
-  }, [initializeWithSeed])
+  }, [initializeWithSeed, router])
 
   const scouted = properties.filter((p) => p.status === 'scouted')
   const todo = properties.filter((p) => p.status === 'todo')
@@ -60,10 +67,34 @@ export default function HomePage() {
       )}
 
       {properties.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--ink-3)' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>🏠</div>
-          <div style={{ fontSize: 16, fontWeight: 500 }}>No properties yet</div>
-          <div style={{ fontSize: 13, marginTop: 6 }}>Add a property to start scouting</div>
+        <div style={{ textAlign: 'center', padding: '80px 24px', color: 'var(--ink-3)' }}>
+          <div
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: '50%',
+              background: 'var(--accent-soft)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 32,
+              margin: '0 auto 20px',
+            }}
+          >
+            🏠
+          </div>
+          <h2
+            className="hs-h-serif"
+            style={{ fontSize: 22, margin: '0 0 10px', color: 'var(--ink)' }}
+          >
+            Ready to scout your first property?
+          </h2>
+          <p style={{ fontSize: 14, margin: '0 0 24px', color: 'var(--ink-3)', lineHeight: 1.5 }}>
+            Walk through every room and get a 1–5 star score.
+          </p>
+          <Link href="/add" className="hs-btn hs-btn--accent" style={{ display: 'inline-block' }}>
+            Add first property →
+          </Link>
         </div>
       )}
 

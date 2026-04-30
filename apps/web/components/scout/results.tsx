@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
 import { computeRoomScore } from '../../lib/scoring'
 import type { Question, AnswerRaw } from '@house-scout/types'
 import { StarRow } from '../ui/star'
@@ -22,13 +25,63 @@ interface ScoutResultsProps {
   onSave: () => void
 }
 
+function getVerdictLabel(score: number): string {
+  if (score >= 4.5) return 'Excellent pick'
+  if (score >= 3.5) return 'Strong contender'
+  if (score >= 2.5) return 'Worth considering'
+  return 'Needs more thought'
+}
+
+function getBarColor(score: number): string {
+  if (score >= 4) return 'var(--accent)'
+  if (score >= 3) return 'var(--ink-2)'
+  return 'var(--ink-3)'
+}
+
 export function ScoutResults({
   propertyName, overall, answered, total,
   categoryDefs, questionsByRoom, answers, onSave,
 }: ScoutResultsProps) {
+  const [shareCopied, setShareCopied] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const shareCopiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  useEffect(() => () => {
+    if (shareCopiedTimerRef.current) clearTimeout(shareCopiedTimerRef.current)
+  }, [])
+
   const roomScores = categoryDefs
     .map((r) => ({ ...r, score: computeRoomScore(r.id, questionsByRoom, answers) }))
     .filter((r): r is typeof r & { score: number } => r.score !== null)
+
+  const verdictLabel = getVerdictLabel(overall)
+
+  async function handleShare() {
+    const shareText = `${propertyName}: ${overall.toFixed(1)}/5 stars — scouted with House Scout`
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
+      try {
+        await navigator.share({ title: 'House Scout', text: shareText })
+        return
+      } catch {
+        // user cancelled or share failed — fall through to clipboard
+      }
+    }
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(shareText)
+        shareCopiedTimerRef.current = setTimeout(() => setShareCopied(false), 2000)
+        setShareCopied(true)
+      } catch {
+        // clipboard unavailable or permission denied — nothing to surface
+        console.error('Share failed: clipboard unavailable')
+      }
+    }
+  }
 
   return (
     <div
@@ -56,7 +109,10 @@ export function ScoutResults({
         <div style={{ margin: '8px 0 6px' }}>
           <StarRow score={overall} size={20} />
         </div>
-        <div style={{ fontSize: 12, color: 'var(--ink-3)' }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink-2)', marginTop: 6 }}>
+          {verdictLabel}
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 4 }}>
           {answered} of {total} answered
         </div>
       </div>
@@ -72,24 +128,49 @@ export function ScoutResults({
           <div
             key={r.id}
             style={{
-              display: 'flex', alignItems: 'center', gap: 10,
               padding: '10px 14px',
               background: 'var(--bg-elev)', border: '1px solid var(--line)',
               borderRadius: 'var(--r-md)',
             }}
           >
-            <Icon name={r.icon as IconName} size={14} color="var(--ink-3)" />
-            <span style={{ flex: 1, fontSize: 13, fontWeight: 500 }}>{r.name}</span>
-            <StarRow score={r.score} size={10} />
-            <span style={{ fontSize: 12, color: 'var(--ink-3)', minWidth: 28, textAlign: 'right' }}>
-              {r.score.toFixed(1)}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Icon name={r.icon as IconName} size={14} color="var(--ink-3)" />
+              <span style={{ flex: 1, fontSize: 13, fontWeight: 500 }}>{r.name}</span>
+              <StarRow score={r.score} size={10} />
+              <span style={{ fontSize: 12, color: 'var(--ink-3)', minWidth: 28, textAlign: 'right' }}>
+                {r.score.toFixed(1)}
+              </span>
+            </div>
+            <div style={{
+              marginTop: 8,
+              height: 4,
+              borderRadius: 2,
+              background: 'var(--bg-sunk)',
+              overflow: 'hidden',
+            }}>
+              <div
+                style={{
+                  height: '100%',
+                  width: mounted ? `${(r.score / 5) * 100}%` : '0%',
+                  background: getBarColor(r.score),
+                  borderRadius: 2,
+                  transition: 'width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                }}
+              />
+            </div>
           </div>
         ))}
       </div>
 
       <button onClick={onSave} className="hs-btn hs-btn--primary" style={{ width: '100%' }}>
         Save report
+      </button>
+      <button
+        onClick={() => { void handleShare() }}
+        className="hs-btn hs-btn--ghost"
+        style={{ width: '100%', marginTop: 8 }}
+      >
+        {shareCopied ? 'Copied!' : 'Share'}
       </button>
     </div>
   )
