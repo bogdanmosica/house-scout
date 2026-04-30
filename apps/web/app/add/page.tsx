@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import type { PropertyType, PropertyMode, PropertyTone } from '@house-scout/types'
+import { Icon } from '../../components/ui/icon'
 
 const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: 'apartment', label: 'Apartment' },
@@ -77,6 +78,18 @@ export default function AddPropertyPage() {
 
   return (
     <div style={{ minHeight: '100svh', background: 'var(--bg)', padding: '48px 20px 80px' }}>
+      <button
+        onClick={() => router.push('/')}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit',
+          marginBottom: 24, padding: 0,
+        }}
+      >
+        <Icon name="chevron-left" size={14} />
+        Back
+      </button>
       <div style={{ marginBottom: 32 }}>
         <div className="hs-label">New property</div>
         <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 0' }}>Add a property</h1>

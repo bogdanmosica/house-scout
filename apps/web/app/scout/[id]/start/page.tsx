@@ -2,6 +2,7 @@
 import { useParams, useRouter } from 'next/navigation'
 import { usePropertyStore, useScoutStore } from '@house-scout/stores'
 import type { ScoutDepth } from '@house-scout/types'
+import { Icon } from '../../../../components/ui/icon'
 
 export default function ScoutStartPage() {
   const params = useParams()
@@ -30,6 +31,18 @@ export default function ScoutStartPage() {
       display: 'flex', flexDirection: 'column',
       padding: '48px 20px 32px',
     }}>
+      <button
+        onClick={() => router.push('/')}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 6,
+          background: 'none', border: 'none', cursor: 'pointer',
+          color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit',
+          marginBottom: 24, padding: 0,
+        }}
+      >
+        <Icon name="chevron-left" size={14} />
+        Back
+      </button>
       <div className="hs-label" style={{ marginBottom: 6 }}>Start scouting</div>
       <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '0 0 4px' }}>
         {property.name}

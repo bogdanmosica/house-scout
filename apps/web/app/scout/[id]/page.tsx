@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { usePropertyStore } from '@house-scout/stores'
 import { useScoutStore } from '@house-scout/stores'
@@ -11,6 +11,7 @@ import { RoomChips } from '../../../components/scout/room-chips'
 import { BottomNav } from '../../../components/scout/bottom-nav'
 import { QuestionCard } from '../../../components/ui/question-card'
 import { ScoutResults } from '../../../components/scout/results'
+import { Icon } from '../../../components/ui/icon'
 
 export default function ScoutPage() {
   const params = useParams()
@@ -23,10 +24,11 @@ export default function ScoutPage() {
 
   const [screen, setScreen] = useState<'tour' | 'result'>('tour')
   const [roomIdx, setRoomIdx] = useState(0)
+  const isSaving = useRef(false)
 
   // Redirect to start screen if no session — session is started there
   useEffect(() => {
-    if (property && !session) {
+    if (property && !session && !isSaving.current) {
       router.replace(`/scout/${id}/start`)
     }
   }, [property, session, id, router])
@@ -80,10 +82,19 @@ export default function ScoutPage() {
   }
 
   const handleSave = () => {
+    isSaving.current = true
     const rounded = Math.round(Math.min(5, Math.max(1, rating.overall)))
     setRating(id, rounded)
     endSession()
-    router.push(`/property/${id}`)
+    router.push('/')
+  }
+
+  const handleBack = () => {
+    if (window.confirm('Leave scout? Answers will be lost.')) {
+      isSaving.current = true
+      endSession()
+      router.push('/')
+    }
   }
 
   if (screen === 'result') {
@@ -106,6 +117,18 @@ export default function ScoutPage() {
   return (
     <div style={{ height: '100svh', background: 'var(--bg)', display: 'flex', flexDirection: 'column', paddingTop: 16 }}>
       <div style={{ padding: '0 20px 14px' }}>
+        <button
+          onClick={handleBack}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: 'none', border: 'none', cursor: 'pointer',
+            color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit',
+            marginBottom: 12, padding: 0,
+          }}
+        >
+          <Icon name="chevron-left" size={14} />
+          Back
+        </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
           <Photo tone={property.tone} height={36} style={{ width: 36, borderRadius: 10 }} label="" />
           <div style={{ flex: 1, minWidth: 0 }}>
