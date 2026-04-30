@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ro"
       data-theme="light"
       data-accent="terra"
       className={`${fraunces.variable} ${inter.variable} h-full antialiased`}

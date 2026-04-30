@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import type { Question } from '@house-scout/types'
 
 export type Locale = 'ro' | 'en'
@@ -549,6 +549,10 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem(STORAGE_KEY) as Locale | null
     return stored === 'ro' || stored === 'en' ? stored : 'ro'
   })
+
+  useEffect(() => {
+    document.documentElement.lang = locale
+  }, [locale])
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l)
