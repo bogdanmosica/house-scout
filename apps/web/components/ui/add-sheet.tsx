@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Icon } from './icon'
 import type { PropertyMode, PropertyType } from '@house-scout/types'
 import { useTranslation } from '../../lib/i18n'
+import { useUserStore } from '@house-scout/stores'
 
 interface Props {
   open: boolean
@@ -16,6 +17,7 @@ export function AddSheet({ open, onClose }: Props) {
   const router = useRouter()
   const [mode, setMode] = useState<PropertyMode | null>(null)
   const { t } = useTranslation()
+  const preferredMode = useUserStore((s) => s.mode)
 
   const handleType = (type: PropertyType) => {
     router.push(`/add?mode=${mode}&type=${type}`)
@@ -63,7 +65,7 @@ export function AddSheet({ open, onClose }: Props) {
                   className="hs-card hs-focusable"
                   style={{
                     padding: '18px 20px', textAlign: 'left', cursor: 'pointer',
-                    border: '1px solid var(--line)', background: 'var(--bg)',
+                    border: `1px solid ${m === preferredMode ? 'var(--accent)' : 'var(--line)'}`, background: 'var(--bg)',
                     borderRadius: 'var(--r-lg)', width: '100%',
                   }}
                 >

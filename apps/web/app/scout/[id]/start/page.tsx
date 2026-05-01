@@ -1,6 +1,6 @@
 'use client'
 import { useParams, useRouter } from 'next/navigation'
-import { usePropertyStore, useScoutStore } from '@house-scout/stores'
+import { usePropertyStore, useScoutStore, useUserStore } from '@house-scout/stores'
 import type { ScoutDepth } from '@house-scout/types'
 import { Icon } from '../../../../components/ui/icon'
 import { useTranslation } from '../../../../lib/i18n'
@@ -13,6 +13,7 @@ export default function ScoutStartPage() {
 
   const property = usePropertyStore((s) => s.properties.find((p) => p.id === id))
   const { startSession } = useScoutStore()
+  const preferredBank = useUserStore((s) => s.bank)
 
   if (!property) {
     return (
@@ -23,7 +24,7 @@ export default function ScoutStartPage() {
   }
 
   const handleSelect = (depth: ScoutDepth) => {
-    startSession(property.id, property.mode, 'full', depth)
+    startSession(property.id, property.mode, preferredBank, depth)
     router.push(`/scout/${id}`)
   }
 
