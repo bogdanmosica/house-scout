@@ -11,7 +11,7 @@ interface PropertyCardProps {
 }
 
 export function PropertyCard({ property: p }: PropertyCardProps) {
-  const href = p.status === 'todo' ? `/scout/${p.id}` : `/property/${p.id}`
+  const href = p.status === 'todo' ? `/scout/${p.id}/start` : `/property/${p.id}`
   const { t } = useTranslation()
 
   return (

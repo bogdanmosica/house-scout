@@ -31,9 +31,7 @@ function AddForm() {
 
   const canSubmit = name.trim().length > 0 && address.trim().length > 0
 
-  const handleSubmit = () => {
-    if (!canSubmit) return
-    // eslint-disable-next-line react-hooks/purity
+  const createProperty = () => {
     const id = `p${Date.now()}`
     addProperty({
       id,
@@ -54,6 +52,18 @@ function AddForm() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     })
+    return id
+  }
+
+  const handleSaveLater = () => {
+    if (!canSubmit) return
+    createProperty()
+    router.push('/')
+  }
+
+  const handleScoutNow = () => {
+    if (!canSubmit) return
+    const id = createProperty()
     router.push(`/scout/${id}/start`)
   }
 
@@ -168,14 +178,24 @@ function AddForm() {
           </div>
         </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="hs-btn hs-btn--primary"
-          style={{ width: '100%', marginTop: 8, opacity: canSubmit ? 1 : 0.4 }}
-        >
-          {t('add.cta')}
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
+          <button
+            onClick={handleScoutNow}
+            disabled={!canSubmit}
+            className="hs-btn hs-btn--primary"
+            style={{ width: '100%', opacity: canSubmit ? 1 : 0.4 }}
+          >
+            {t('add.cta.scout')}
+          </button>
+          <button
+            onClick={handleSaveLater}
+            disabled={!canSubmit}
+            className="hs-btn"
+            style={{ width: '100%', opacity: canSubmit ? 1 : 0.4 }}
+          >
+            {t('add.cta.save')}
+          </button>
+        </div>
       </div>
     </div>
   )
