@@ -36,6 +36,7 @@ describe('setProfile', () => {
     const parsed = JSON.parse(raw!)
     expect(parsed.state.mode).toBe('buy')
     expect(parsed.state.onboarded).toBe(true)
+    expect(parsed.state.bank).toBe('full')
   })
 })
 
