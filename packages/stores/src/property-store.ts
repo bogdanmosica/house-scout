@@ -9,6 +9,7 @@ interface PropertyState {
   deleteProperty: (id: string) => void
   setRating: (id: string, rating: number) => void
   initializeWithSeed: (seed: Property[]) => void
+  clearAll: () => void
 }
 
 export const usePropertyStore = create<PropertyState>()(
@@ -38,6 +39,7 @@ export const usePropertyStore = create<PropertyState>()(
           set({ properties: seed })
         }
       },
+      clearAll: () => set({ properties: [] }),
     }),
     { name: 'house-scout-properties' }
   )
