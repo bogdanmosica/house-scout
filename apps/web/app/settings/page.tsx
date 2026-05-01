@@ -2,8 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '../../lib/i18n'
-import { useUserStore } from '@house-scout/stores'
-import { usePropertyStore } from '@house-scout/stores'
+import { useUserStore, usePropertyStore } from '@house-scout/stores'
 import { Icon } from '../../components/ui/icon'
 
 type ConfirmTarget = 'prefs' | 'data' | null
@@ -24,6 +23,7 @@ export default function SettingsPage() {
 
   function handleResetPrefs() {
     clearUser()
+    setConfirm(null)
     router.push('/onboarding')
   }
 
