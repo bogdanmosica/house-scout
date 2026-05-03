@@ -66,10 +66,10 @@ export interface Property {
   city: string
   type: PropertyType
   mode: PropertyMode
-  price: string
+  price: number
   beds: number
   baths: number
-  sqft: number
+  sqm: number
   rating: number | null
   tone: PropertyTone
   status: PropertyStatus

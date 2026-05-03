@@ -69,7 +69,7 @@ export default function PropertyDetailPage() {
             <Icon name="bath" size={14} /> {property.baths}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <Icon name="sqft" size={14} /> {property.sqft.toLocaleString()} {t('prop.sqft')}
+            <Icon name="sqft" size={14} /> {property.sqm.toLocaleString()} {t('prop.sqft')}
           </span>
         </div>
 
@@ -86,7 +86,7 @@ export default function PropertyDetailPage() {
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: 'var(--ink-3)', marginBottom: 8 }}>{t('prop.rating')}</div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>{property.price}</div>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>{`€${property.price.toLocaleString()}${property.mode === 'rent' ? '/mo' : ''}`}</div>
             </div>
           </div>
         ) : (

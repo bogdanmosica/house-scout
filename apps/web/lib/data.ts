@@ -268,7 +268,7 @@ export function getInspectionQuestions(): Record<InspectionCategory, Question[]>
 export const SEED_PROPERTIES: Property[] = [
   {
     id: 'p1', name: 'Corner Flat on Maple', address: '412 Maple Ave', city: 'East Village',
-    type: 'apartment', mode: 'rent', price: '$2,850/mo', beds: 2, baths: 1, sqft: 860,
+    type: 'apartment', mode: 'rent', price: 2850, beds: 2, baths: 1, sqm: 80,
     rating: 4.4, tone: 'terra', status: 'scouted',
     highlights: ['Great light', 'Quiet block', 'Near park'],
     notes: 'Upstairs neighbors felt quiet on a Tuesday afternoon. Kitchen has original hardwood that creaks charmingly.',
@@ -276,7 +276,7 @@ export const SEED_PROPERTIES: Property[] = [
   },
   {
     id: 'p2', name: 'Garden Cottage', address: '28 Willow Lane', city: 'Brookside',
-    type: 'house', mode: 'buy', price: '$485,000', beds: 3, baths: 2, sqft: 1420,
+    type: 'house', mode: 'buy', price: 485000, beds: 3, baths: 2, sqm: 132,
     rating: 3.8, tone: 'sage', status: 'scouted',
     highlights: ['Private garden', 'Needs kitchen work', 'Owner motivated'],
     notes: 'Beautiful tree in the backyard. Kitchen cabinets clearly from the 80s — budget $15k for redo.',
@@ -284,7 +284,7 @@ export const SEED_PROPERTIES: Property[] = [
   },
   {
     id: 'p3', name: 'Tower 12B', address: 'Harborfront Tower', city: 'Downtown',
-    type: 'condo', mode: 'buy', price: '$612,000', beds: 1, baths: 1, sqft: 720,
+    type: 'condo', mode: 'buy', price: 612000, beds: 1, baths: 1, sqm: 67,
     rating: 4.1, tone: 'sky', status: 'scouted',
     highlights: ['Skyline view', 'Building gym', 'Small bedroom'],
     notes: 'View is absurd. Bedroom barely fits a queen — maybe for a single buyer or couple only.',
@@ -292,7 +292,7 @@ export const SEED_PROPERTIES: Property[] = [
   },
   {
     id: 'p4', name: 'Oak Street Loft', address: '91 Oak St', city: 'Arts District',
-    type: 'loft', mode: 'rent', price: '$3,200/mo', beds: 1, baths: 1, sqft: 1100,
+    type: 'loft', mode: 'rent', price: 3200, beds: 1, baths: 1, sqm: 102,
     rating: 3.5, tone: 'gold', status: 'scouted',
     highlights: ['High ceilings', 'Loud neighbors'],
     notes: 'Ceilings felt magical; then a bass line started up next door at 4pm.',
@@ -300,7 +300,7 @@ export const SEED_PROPERTIES: Property[] = [
   },
   {
     id: 'p5', name: 'Linden Cottage', address: '7 Linden Ct', city: 'Greenside',
-    type: 'house', mode: 'buy', price: '$520,000', beds: 3, baths: 2, sqft: 1550,
+    type: 'house', mode: 'buy', price: 520000, beds: 3, baths: 2, sqm: 144,
     rating: null, tone: 'sage', status: 'todo',
     highlights: [], notes: '',
     createdAt: '2026-04-15T11:00:00Z', updatedAt: '2026-04-15T11:00:00Z',

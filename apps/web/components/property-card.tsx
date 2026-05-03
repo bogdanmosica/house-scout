@@ -51,12 +51,12 @@ export function PropertyCard({ property: p }: PropertyCardProps) {
               <Icon name="bath" size={12} /> {p.baths}
             </span>
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Icon name="sqft" size={12} /> {p.sqft.toLocaleString()} {t('prop.sqft')}
+              <Icon name="sqft" size={12} /> {p.sqm.toLocaleString()} {t('prop.sqft')}
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontWeight: 600, fontSize: 14 }}>{p.price}</span>
+            <span style={{ fontWeight: 600, fontSize: 14 }}>{`€${p.price.toLocaleString()}${p.mode === 'rent' ? '/mo' : ''}`}</span>
             {p.rating != null && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <StarRow score={p.rating} size={11} />

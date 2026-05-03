@@ -5,6 +5,7 @@ import { usePropertyStore } from '@house-scout/stores'
 import type { PropertyType, PropertyMode, PropertyTone } from '@house-scout/types'
 import { Icon } from '../../components/ui/icon'
 import { useTranslation } from '../../lib/i18n'
+import { CityAutocomplete } from '../../components/ui/city-autocomplete'
 
 const TONES: PropertyTone[] = ['terra', 'sage', 'sky', 'gold']
 
@@ -24,10 +25,10 @@ function AddForm() {
   const [name, setName] = useState('')
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
-  const [price, setPrice] = useState('')
+  const [price, setPrice] = useState<string>('')
   const [beds, setBeds] = useState(1)
   const [baths, setBaths] = useState(1)
-  const [sqft, setSqft] = useState(0)
+  const [sqm, setSqm] = useState<string>('')
 
   const canSubmit = name.trim().length > 0 && address.trim().length > 0
 
@@ -40,10 +41,10 @@ function AddForm() {
       city: city.trim(),
       type,
       mode,
-      price: price.trim(),
+      price: parseFloat(price) || 0,
       beds,
       baths,
-      sqft,
+      sqm: parseFloat(sqm) || 0,
       rating: null,
       tone: randomTone(),
       status: 'todo',
@@ -67,21 +68,43 @@ function AddForm() {
     router.push(`/scout/${id}/start`)
   }
 
-  const inputStyle = {
-    width: '100%', padding: '12px 14px',
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '12px 14px',
     border: '1px solid var(--line-strong)',
     background: 'var(--bg-elev)',
     color: 'var(--ink)',
     borderRadius: 'var(--r-input)',
-    fontSize: 14, fontFamily: 'inherit',
+    fontSize: 14,
+    fontFamily: 'inherit',
     outline: 'none',
-    boxSizing: 'border-box' as const,
+    boxSizing: 'border-box',
   }
 
-  const labelStyle = {
-    fontSize: 11, fontWeight: 700, color: 'var(--ink-3)',
-    letterSpacing: '0.06em', textTransform: 'uppercase' as const,
-    display: 'block', marginBottom: 6,
+  const labelStyle: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 700,
+    color: 'var(--ink-3)',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    display: 'block',
+    marginBottom: 6,
+  }
+
+  const stepperBtnStyle: React.CSSProperties = {
+    width: 36,
+    height: 36,
+    background: 'var(--bg)',
+    border: '1px solid var(--line-strong)',
+    borderRadius: '50%',
+    fontSize: 18,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: 'inherit',
+    color: 'var(--ink)',
+    flexShrink: 0,
   }
 
   const typeLabel = t(`sheet.${type}`)
@@ -92,21 +115,30 @@ function AddForm() {
       <button
         onClick={() => router.push('/')}
         style={{
-          display: 'flex', alignItems: 'center', gap: 6,
-          background: 'none', border: 'none', cursor: 'pointer',
-          color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit',
-          marginBottom: 24, padding: 0,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: 'var(--ink-3)',
+          fontSize: 13,
+          fontFamily: 'inherit',
+          marginBottom: 24,
+          padding: 0,
         }}
       >
         <Icon name="chevron-left" size={14} />
         {t('add.back')}
       </button>
+
       <div style={{ marginBottom: 32 }}>
         <div className="hs-label">{typeLabel} · {modeLabel}</div>
         <h1 className="hs-h-serif" style={{ fontSize: 28, margin: '4px 0 0' }}>{t('add.title')}</h1>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        {/* Name */}
         <div>
           <label style={labelStyle}>{t('add.name')}</label>
           <input
@@ -117,6 +149,7 @@ function AddForm() {
           />
         </div>
 
+        {/* Address */}
         <div>
           <label style={labelStyle}>{t('add.address')}</label>
           <input
@@ -127,57 +160,188 @@ function AddForm() {
           />
         </div>
 
+        {/* City — autocomplete */}
         <div>
           <label style={labelStyle}>{t('add.city')}</label>
-          <input
-            style={inputStyle}
-            placeholder={t('add.city.ph')}
+          <CityAutocomplete
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={setCity}
+            placeholder={t('add.city.ph')}
           />
         </div>
 
+        {/* Price */}
         <div>
           <label style={labelStyle}>{t('add.price')}</label>
-          <input
-            style={inputStyle}
-            placeholder={mode === 'rent' ? t('add.price.ph.rent') : t('add.price.ph.buy')}
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid var(--line-strong)',
+              background: 'var(--bg-elev)',
+              borderRadius: 'var(--r-input)',
+              overflow: 'hidden',
+            }}
+          >
+            <span
+              style={{
+                padding: '0 10px',
+                color: 'var(--ink-3)',
+                fontSize: 14,
+                fontFamily: 'inherit',
+                flexShrink: 0,
+              }}
+            >
+              €
+            </span>
+            <input
+              style={{
+                flex: 1,
+                padding: '12px 4px',
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--ink)',
+                fontSize: 14,
+                fontFamily: 'inherit',
+                outline: 'none',
+              }}
+              inputMode="numeric"
+              placeholder={mode === 'rent' ? t('add.price.ph.rent') : t('add.price.ph.buy')}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+            {mode === 'rent' && (
+              <span
+                style={{
+                  padding: '0 10px',
+                  color: 'var(--ink-3)',
+                  fontSize: 13,
+                  fontFamily: 'inherit',
+                  flexShrink: 0,
+                }}
+              >
+                /mo
+              </span>
+            )}
+          </div>
         </div>
 
+        {/* Beds / Baths / Sqm */}
         <div style={{ display: 'flex', gap: 12 }}>
+          {/* Beds stepper */}
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.beds')}</label>
-            <input
-              style={inputStyle}
-              type="number" min={0} max={20}
-              value={beds}
-              onChange={(e) => setBeds(Number(e.target.value))}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+              <button
+                type="button"
+                style={stepperBtnStyle}
+                onClick={() => setBeds((v) => Math.max(0, v - 1))}
+                aria-label="Decrease beds"
+              >
+                −
+              </button>
+              <span
+                style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  minWidth: 32,
+                  textAlign: 'center',
+                  color: 'var(--ink)',
+                }}
+              >
+                {beds}
+              </span>
+              <button
+                type="button"
+                style={stepperBtnStyle}
+                onClick={() => setBeds((v) => Math.min(20, v + 1))}
+                aria-label="Increase beds"
+              >
+                +
+              </button>
+            </div>
           </div>
+
+          {/* Baths stepper */}
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.baths')}</label>
-            <input
-              style={inputStyle}
-              type="number" min={0} max={20}
-              value={baths}
-              onChange={(e) => setBaths(Number(e.target.value))}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+              <button
+                type="button"
+                style={stepperBtnStyle}
+                onClick={() => setBaths((v) => Math.max(0, v - 1))}
+                aria-label="Decrease baths"
+              >
+                −
+              </button>
+              <span
+                style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  minWidth: 32,
+                  textAlign: 'center',
+                  color: 'var(--ink)',
+                }}
+              >
+                {baths}
+              </span>
+              <button
+                type="button"
+                style={stepperBtnStyle}
+                onClick={() => setBaths((v) => Math.min(20, v + 1))}
+                aria-label="Increase baths"
+              >
+                +
+              </button>
+            </div>
           </div>
+
+          {/* Sqm */}
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.sqft')}</label>
-            <input
-              style={inputStyle}
-              type="number" min={0}
-              value={sqft || ''}
-              placeholder="0"
-              onChange={(e) => setSqft(Number(e.target.value))}
-            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                border: '1px solid var(--line-strong)',
+                background: 'var(--bg-elev)',
+                borderRadius: 'var(--r-input)',
+                overflow: 'hidden',
+              }}
+            >
+              <input
+                style={{
+                  flex: 1,
+                  padding: '12px 4px 12px 14px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--ink)',
+                  fontSize: 14,
+                  fontFamily: 'inherit',
+                  outline: 'none',
+                  minWidth: 0,
+                }}
+                inputMode="numeric"
+                placeholder="0"
+                value={sqm}
+                onChange={(e) => setSqm(e.target.value)}
+              />
+              <span
+                style={{
+                  padding: '0 8px',
+                  color: 'var(--ink-3)',
+                  fontSize: 13,
+                  fontFamily: 'inherit',
+                  flexShrink: 0,
+                }}
+              >
+                m²
+              </span>
+            </div>
           </div>
         </div>
 
+        {/* CTAs */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 8 }}>
           <button
             onClick={handleScoutNow}
