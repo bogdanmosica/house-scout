@@ -170,173 +170,55 @@ function AddForm() {
           />
         </div>
 
-        {/* Price */}
-        <div>
-          <label style={labelStyle}>{t('add.price')}</label>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid var(--line-strong)',
-              background: 'var(--bg-elev)',
-              borderRadius: 'var(--r-input)',
-              overflow: 'hidden',
-            }}
-          >
-            <span
-              style={{
-                padding: '0 10px',
-                color: 'var(--ink-3)',
-                fontSize: 14,
-                fontFamily: 'inherit',
-                flexShrink: 0,
-              }}
-            >
-              €
-            </span>
-            <input
-              style={{
-                flex: 1,
-                padding: '12px 4px',
-                border: 'none',
-                background: 'transparent',
-                color: 'var(--ink)',
-                fontSize: 14,
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
-              inputMode="numeric"
-              placeholder={mode === 'rent' ? t('add.price.ph.rent') : t('add.price.ph.buy')}
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-            {mode === 'rent' && (
-              <span
-                style={{
-                  padding: '0 10px',
-                  color: 'var(--ink-3)',
-                  fontSize: 13,
-                  fontFamily: 'inherit',
-                  flexShrink: 0,
-                }}
-              >
-                /mo
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Beds / Baths / Sqm */}
+        {/* Beds | Baths */}
         <div style={{ display: 'flex', gap: 12 }}>
-          {/* Beds stepper */}
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.beds')}</label>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-              <button
-                type="button"
-                style={stepperBtnStyle}
-                onClick={() => setBeds((v) => Math.max(0, v - 1))}
-                aria-label="Decrease beds"
-              >
-                −
-              </button>
-              <span
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  minWidth: 32,
-                  textAlign: 'center',
-                  color: 'var(--ink)',
-                }}
-              >
-                {beds}
-              </span>
-              <button
-                type="button"
-                style={stepperBtnStyle}
-                onClick={() => setBeds((v) => Math.min(20, v + 1))}
-                aria-label="Increase beds"
-              >
-                +
-              </button>
+              <button type="button" style={stepperBtnStyle} onClick={() => setBeds((v) => Math.max(0, v - 1))} aria-label="Decrease beds">−</button>
+              <span style={{ fontSize: 18, fontWeight: 600, minWidth: 32, textAlign: 'center', color: 'var(--ink)' }}>{beds}</span>
+              <button type="button" style={stepperBtnStyle} onClick={() => setBeds((v) => Math.min(20, v + 1))} aria-label="Increase beds">+</button>
             </div>
           </div>
-
-          {/* Baths stepper */}
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.baths')}</label>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-              <button
-                type="button"
-                style={stepperBtnStyle}
-                onClick={() => setBaths((v) => Math.max(0, v - 1))}
-                aria-label="Decrease baths"
-              >
-                −
-              </button>
-              <span
-                style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  minWidth: 32,
-                  textAlign: 'center',
-                  color: 'var(--ink)',
-                }}
-              >
-                {baths}
-              </span>
-              <button
-                type="button"
-                style={stepperBtnStyle}
-                onClick={() => setBaths((v) => Math.min(20, v + 1))}
-                aria-label="Increase baths"
-              >
-                +
-              </button>
+              <button type="button" style={stepperBtnStyle} onClick={() => setBaths((v) => Math.max(0, v - 1))} aria-label="Decrease baths">−</button>
+              <span style={{ fontSize: 18, fontWeight: 600, minWidth: 32, textAlign: 'center', color: 'var(--ink)' }}>{baths}</span>
+              <button type="button" style={stepperBtnStyle} onClick={() => setBaths((v) => Math.min(20, v + 1))} aria-label="Increase baths">+</button>
             </div>
           </div>
+        </div>
 
-          {/* Sqm */}
+        {/* Sqm | Price */}
+        <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ flex: 1 }}>
             <label style={labelStyle}>{t('add.sqft')}</label>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                border: '1px solid var(--line-strong)',
-                background: 'var(--bg-elev)',
-                borderRadius: 'var(--r-input)',
-                overflow: 'hidden',
-              }}
-            >
+            <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--line-strong)', background: 'var(--bg-elev)', borderRadius: 'var(--r-input)', overflow: 'hidden' }}>
               <input
-                style={{
-                  flex: 1,
-                  padding: '12px 4px 12px 14px',
-                  border: 'none',
-                  background: 'transparent',
-                  color: 'var(--ink)',
-                  fontSize: 14,
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                  minWidth: 0,
-                }}
+                style={{ flex: 1, padding: '12px 4px 12px 14px', border: 'none', background: 'transparent', color: 'var(--ink)', fontSize: 14, fontFamily: 'inherit', outline: 'none', minWidth: 0 }}
                 inputMode="numeric"
                 placeholder="0"
                 value={sqm}
                 onChange={(e) => setSqm(e.target.value)}
               />
-              <span
-                style={{
-                  padding: '0 8px',
-                  color: 'var(--ink-3)',
-                  fontSize: 13,
-                  fontFamily: 'inherit',
-                  flexShrink: 0,
-                }}
-              >
-                m²
-              </span>
+              <span style={{ padding: '0 8px', color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit', flexShrink: 0 }}>m²</span>
+            </div>
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={labelStyle}>{t('add.price')}</label>
+            <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--line-strong)', background: 'var(--bg-elev)', borderRadius: 'var(--r-input)', overflow: 'hidden' }}>
+              <span style={{ padding: '0 8px', color: 'var(--ink-3)', fontSize: 14, fontFamily: 'inherit', flexShrink: 0 }}>€</span>
+              <input
+                style={{ flex: 1, padding: '12px 4px', border: 'none', background: 'transparent', color: 'var(--ink)', fontSize: 14, fontFamily: 'inherit', outline: 'none', minWidth: 0 }}
+                inputMode="numeric"
+                placeholder={mode === 'rent' ? t('add.price.ph.rent') : t('add.price.ph.buy')}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              {mode === 'rent' && (
+                <span style={{ padding: '0 8px', color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit', flexShrink: 0 }}>/mo</span>
+              )}
             </div>
           </div>
         </div>
