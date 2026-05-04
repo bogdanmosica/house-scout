@@ -191,8 +191,8 @@ function AddForm() {
         </div>
 
         {/* Sqm | Price */}
-        <div style={{ display: 'flex', gap: 12 }}>
-          <div style={{ flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div>
             <label style={labelStyle}>{t('add.sqft')}</label>
             <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--line-strong)', background: 'var(--bg-elev)', borderRadius: 'var(--r-input)', overflow: 'hidden' }}>
               <input
@@ -205,7 +205,7 @@ function AddForm() {
               <span style={{ padding: '0 8px', color: 'var(--ink-3)', fontSize: 13, fontFamily: 'inherit', flexShrink: 0 }}>m²</span>
             </div>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <label style={labelStyle}>{t('add.price')}</label>
             <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--line-strong)', background: 'var(--bg-elev)', borderRadius: 'var(--r-input)', overflow: 'hidden' }}>
               <span style={{ padding: '0 8px', color: 'var(--ink-3)', fontSize: 14, fontFamily: 'inherit', flexShrink: 0 }}>€</span>
