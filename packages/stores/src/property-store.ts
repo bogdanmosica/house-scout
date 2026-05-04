@@ -41,6 +41,20 @@ export const usePropertyStore = create<PropertyState>()(
       },
       clearAll: () => set({ properties: [] }),
     }),
-    { name: 'house-scout-properties' }
+    {
+      name: 'house-scout-properties',
+      version: 1,
+      migrate(state: unknown, fromVersion: number) {
+        if (fromVersion < 1) {
+          const s = state as { properties: Record<string, unknown>[] }
+          s.properties = s.properties.map((p) => ({
+            ...p,
+            sqm: typeof p.sqm === 'number' ? p.sqm : typeof p.sqft === 'number' ? Math.round((p.sqft as number) * 0.0929) : 0,
+            price: typeof p.price === 'number' ? p.price : 0,
+          }))
+        }
+        return state
+      },
+    }
   )
 )
